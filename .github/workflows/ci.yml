@@ -1,0 +1,76 @@
+name: MADpilot CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-chibios:
+    name: Build Plane & Bootloader (${{ matrix.board }})
+    runs-on: ubuntu-22.04
+    container: ardupilot/ardupilot-dev-chibios:v0.1.3
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - MatekH743
+
+    steps:
+      - name: Configure Git safe directory
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Ensure nested submodules are initialized
+        working-directory: ardupilot
+        run: |
+          git submodule update --init --recursive
+
+      - name: Build Bootloader (${{ matrix.board }})
+        working-directory: ardupilot
+        run: |
+          export PATH="/usr/lib/ccache:/opt/gcc-arm-none-eabi-10/bin:/github/home/.local/bin:$PATH"
+          ./waf configure --board ${{ matrix.board }} --bootloader
+          ./waf clean
+          ./waf bootloader
+
+      - name: Build Plane Firmware (${{ matrix.board }})
+        working-directory: ardupilot
+        run: |
+          export PATH="/usr/lib/ccache:/opt/gcc-arm-none-eabi-10/bin:/github/home/.local/bin:$PATH"
+          ./waf configure --board ${{ matrix.board }}
+          ./waf clean
+          ./waf plane
+
+      - name: Stage Artifacts
+        run: |
+          mkdir -p staging/${{ matrix.board }}
+          # Copy plane firmware artifacts (.apj and .bin)
+          if [ -d "ardupilot/build/${{ matrix.board }}/bin" ]; then
+            find ardupilot/build/${{ matrix.board }}/bin -maxdepth 1 -type f \( -name "*.apj" -o -name "*.bin" -o -name "*.hex" \) -exec cp {} staging/${{ matrix.board }}/ \;
+          fi
+          # Copy bootloader artifacts
+          if [ -d "ardupilot/build/${{ matrix.board }}/bootloader" ]; then
+            find ardupilot/build/${{ matrix.board }}/bootloader -maxdepth 1 -type f -exec cp {} staging/${{ matrix.board }}/ \;
+          fi
+          echo "Staged artifacts for ${{ matrix.board }}:"
+          ls -lh staging/${{ matrix.board }}/
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.board }}-plane-artifacts
+          path: staging/${{ matrix.board }}/
+          retention-days: 14
+          if-no-files-found: error
