@@ -109,7 +109,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install pymavlink "empy==3.3.4" pexpect
+          pip3 install "empy==3.3.4" future pymavlink pyserial pexpect ptyprocess
 
       - name: Build SITL Plane
         working-directory: ardupilot
