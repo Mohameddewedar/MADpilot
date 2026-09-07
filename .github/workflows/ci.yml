@@ -21,6 +21,7 @@ jobs:
       matrix:
         board:
           - MatekH743
+          - MatekH743-madpilot
 
     env:
       PATH: /usr/lib/ccache:/opt/gcc-arm-none-eabi-10/bin:/github/home/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -39,11 +40,25 @@ jobs:
         working-directory: ardupilot
         run: |
           mkdir -p ../staging/${{ matrix.board }}
-          ./waf configure --board ${{ matrix.board }} --bootloader
-          ./waf clean
-          ./waf bootloader
-          # Stage bootloader binaries before plane build
-          cp build/${{ matrix.board }}/bin/AP_Bootloader.* ../staging/${{ matrix.board }}/ || true
+          if [ -f "libraries/AP_HAL_ChibiOS/hwdef/${{ matrix.board }}/hwdef-bl.dat" ]; then
+            ./waf configure --board ${{ matrix.board }} --bootloader
+            ./waf clean
+            ./waf bootloader
+            # Stage bootloader binaries before plane build
+            cp build/${{ matrix.board }}/bin/AP_Bootloader.* ../staging/${{ matrix.board }}/ || true
+          else
+            # OEM board reuses base board bootloader (USE_BOOTLOADER_FROM_BOARD)
+            BASE_BOARD=$(grep -E '^\s*USE_BOOTLOADER_FROM_BOARD\s+' "libraries/AP_HAL_ChibiOS/hwdef/${{ matrix.board }}/hwdef.dat" | awk '{print $2}')
+            echo "OEM board ${{ matrix.board }} reuses bootloader from ${BASE_BOARD}"
+            if [ -f "Tools/bootloaders/${BASE_BOARD}_bl.bin" ]; then
+              cp "Tools/bootloaders/${BASE_BOARD}_bl.bin" "../staging/${{ matrix.board }}/AP_Bootloader.bin"
+            else
+              ./waf configure --board "${BASE_BOARD}" --bootloader
+              ./waf clean
+              ./waf bootloader
+              cp build/"${BASE_BOARD}"/bin/AP_Bootloader.* ../staging/${{ matrix.board }}/ || true
+            fi
+          fi
 
       - name: Build Plane Firmware (${{ matrix.board }})
         working-directory: ardupilot
@@ -69,3 +84,36 @@ jobs:
           path: staging/${{ matrix.board }}/
           retention-days: 14
           if-no-files-found: error
+
+  sitl-smoke:
+    name: SITL Failsafe Smoke Test
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install pymavlink
+
+      - name: Build SITL Plane
+        working-directory: ardupilot
+        run: |
+          ./waf configure --board sitl
+          ./waf plane
+
+      - name: Run SITL Failsafe Smoke Test
+        run: |
+          python3 scripts/sitl_smoke.py \
+            --binary ardupilot/build/sitl/bin/arduplane \
+            --defaults ardupilot/libraries/AP_HAL_ChibiOS/hwdef/MatekH743-madpilot/defaults.parm \
+            --verbose
+
