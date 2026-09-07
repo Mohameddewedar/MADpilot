@@ -1,0 +1,19 @@
+MADpilot Hub Repository Licensing
+
+This repository (MADpilot) is a multi-licensed open-source project. Different components of the repository are licensed under distinct terms as described below:
+
+1. Firmware-Side Artifacts (GNU GPLv3)
+All firmware-side artifacts in this repository—including but not limited to hardware definitions (hwdef/ directory), continuous integration (CI) workflows, build scripts, OEM-layer material (defaults.parm, AP_CUSTOM_FIRMWARE_STRING definitions), and any other derivatives of ArduPilot—are licensed under the GNU General Public License, Version 3 (GPLv3), or (at your option) any later version.
+The full text of the GNU General Public License Version 3 is available at:
+  release/licenses/GPL-3.0.txt
+
+2. Hardware Design Files (CERN-OHL-S-2.0)
+Hardware design files, when added under the hardware/ directory (including KiCad schematics, PCB layouts, bill of materials, Gerbers, pick-and-place files, and related fabrication packages), are licensed under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
+The full text of the CERN Open Hardware Licence Version 2 - Strongly Reciprocal is available at:
+  release/licenses/CERN-OHL-S-2.0.txt
+
+3. Documentation and Other Project Materials
+Documentation, specifications, and project management artifacts (including docs/, PLAN.md, and CONTEXT.md) are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0), or alternatively under CERN-OHL-S-2.0 / GPLv3 as applicable to their context.
+
+4. Trademark Notice
+"Pixhawk" and its logo are registered trademarks of Lorenz Meier. MADpilot is an independent open-hardware project and is not affiliated with, sponsored by, or endorsed by the Pixhawk project. References to "Pixhawk" in this repository and associated documentation appear solely in factual compatibility statements (such as connector pinout standards per docs/adr/0002-pixhawk-standard-connectors.md) and never as part of or adjacent to the product name.

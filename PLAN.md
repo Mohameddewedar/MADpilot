@@ -70,7 +70,7 @@ Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0004) · `E
 - pid.codes PID under VID **0x1D50**.
 - Trademark-safe naming records; "Pixhawk" never in the product name (compatibility statements only).
 - `release/` staging area: design-file publication package (CERN-OHL-S-2.0) + ArduPilot source offer.
-- In-Stock-First BOM snapshots archived at every rev freeze.
+- In-Stock-First BOM snapshots archived at every rev freeze (see hardware/bom/README.md).
 
 **Defer-until-sale (expensive):**
 - CE / FCC / RoHS testing ($3k–10k).

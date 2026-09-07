@@ -1,0 +1,6 @@
+# SHA256 checksums covering snapshot archive files
+# Generated automatically by scripts/snapshot_bom.py covering the BOM and snapshot artifacts
+# Format:
+# <hash>  <bom_filename>.csv
+# <hash>  stock-state.csv
+# <hash>  manifest.json

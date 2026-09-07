@@ -1,0 +1,16 @@
+{
+  "revision": "REV_NAME",
+  "snapshot_date": "YYYY-MM-DD",
+  "bom_file": "bom.csv",
+  "notes": "",
+  "operator": "",
+  "assembly_house": "JLCPCB",
+  "part_fields": [
+    "part_number",
+    "description",
+    "stock_quantity",
+    "lifecycle_state",
+    "unit_price",
+    "product_url"
+  ]
+}
