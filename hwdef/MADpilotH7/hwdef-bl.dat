@@ -1,0 +1,46 @@
+# hw definition file for processing by chibios_hwdef.py
+# for MADpilot-H7 bootloader
+# Design Authority: docs/hardware/comparative-review.md (Section 7)
+
+# MCU class and specific type
+MCU STM32H7xx STM32H743xx
+
+# Board ID for firmware load
+APJ_BOARD_ID 3141
+
+# USB Vendor and Product identification (docs/IDENTITY.md: Openmoko VID 0x1D50, claimed PID 0x61a4)
+USB_VENDOR 0x1D50
+USB_PRODUCT 0x61a4
+USB_STRING_MANUFACTURER "MADpilot"
+
+# Crystal / Oscillator frequency: 8.000 MHz HSE clock source
+OSCILLATOR_HZ 8000000
+
+FLASH_SIZE_KB 2048
+FLASH_RESERVE_START_KB 0
+FLASH_BOOTLOADER_LOAD_KB 128
+
+env OPTIMIZE -Os
+
+# Allow bootloading over USB (OTG1) and primary telemetry (TELEM1 / USART2)
+SERIAL_ORDER OTG1 USART2
+
+# TELEM1 (USART2) bootloader serial
+PD5 USART2_TX USART2 NODMA
+PD6 USART2_RX USART2 NODMA
+
+# USB OTG1
+PA11 OTG_FS_DM OTG1
+PA12 OTG_FS_DP OTG1
+
+# SWD
+PA13 JTMS-SWDIO SWD
+PA14 JTCK-SWCLK SWD
+
+# Activity / Bootloader indicator LED (using safety LED on PE3)
+PE3 LED_BOOTLOADER OUTPUT LOW
+define HAL_LED_ON 0
+
+# Deselect SPI sensor chip selects during bootloader execution
+PC15 IMU1_CS CS
+PC13 IMU2_CS CS

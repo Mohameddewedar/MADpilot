@@ -1,0 +1,5 @@
+@include ../MatekH743-madpilot/defaults.parm
+# MADpilot-H7 fleet default parameter configuration
+# Inherits the Phase-0 foam-trainer OEM defaults verbatim from MatekH743-madpilot (ADR-0004).
+# When staged into ArduPilot's hwdef tree during build (libraries/AP_HAL_ChibiOS/hwdef/MADpilotH7),
+# chibios_hwdef.py expands this @include relative to the file directory, embedding the OEM parameters.
