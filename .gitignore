@@ -2,3 +2,7 @@
 /.claude
 /.commandcode
 /skills-lock.json
+__pycache__/
+*.pyc
+staging/
+build/
