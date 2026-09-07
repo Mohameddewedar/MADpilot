@@ -22,6 +22,7 @@ jobs:
         board:
           - MatekH743
           - MatekH743-madpilot
+          - MADpilotH7
 
     env:
       PATH: /usr/lib/ccache:/opt/gcc-arm-none-eabi-10/bin:/github/home/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -35,6 +36,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Stage hub board definition
+        run: |
+          if [ -d "hwdef/MADpilotH7" ]; then
+            cp -r hwdef/MADpilotH7 ardupilot/libraries/AP_HAL_ChibiOS/hwdef/
+          fi
 
       - name: Build Bootloader (${{ matrix.board }})
         working-directory: ardupilot
@@ -102,7 +109,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install pymavlink
+          pip3 install pymavlink "empy==3.3.4" pexpect
 
       - name: Build SITL Plane
         working-directory: ardupilot
