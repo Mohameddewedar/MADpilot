@@ -23,7 +23,7 @@ Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0004) · `E
 
 ## Phase 1 — Rev A (M2–M6)
 
-- Derive the KiCad project from SAL-FC, LEVIA as cross-check; **In-Stock-First** BOM freeze (ICM-42605, BMI270, MS5611, STM32H743 LQFP-176).
+- Derive the KiCad project from LEVIA-H7 (Base Design, per ADR-0003 amendment), adapting from TFBGA-100 to LQFP-176; SAL-FC retained as firmware-mapping reference; **In-Stock-First** BOM freeze (ICM-42605, BMI270, MS5611, STM32H743 LQFP-176).
 - Custom board support: `hwdef/MADpilotH7/hwdef.dat` + `hwdef-bl.dat`, `APJ_BOARD_ID 3141`, USB VID 0x1D50 + pid.codes PID; bootloader via `Tools/scripts/build_bootloaders.py`, flashed by SWD.
 - **G0: mandatory external schematic + layout review** before ordering (proactive, on top of the reactive Outsource-on-Stall policy).
 - Order: JLC 6-layer bare x10 + stencil + turnkey PCBA x5; hand-build one education board from a spare bare (hotplate + stencil).

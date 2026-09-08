@@ -8,9 +8,12 @@ The full text of the GNU General Public License Version 3 is available at:
   release/licenses/GPL-3.0.txt
 
 2. Hardware Design Files (CERN-OHL-S-2.0)
-Hardware design files, when added under the hardware/ directory (including KiCad schematics, PCB layouts, bill of materials, Gerbers, pick-and-place files, and related fabrication packages), are licensed under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
+Hardware design files under the hardware/ directory (including KiCad schematics, PCB layouts, bill of materials, Gerbers, pick-and-place files, and related fabrication packages) are licensed under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
 The full text of the CERN Open Hardware Licence Version 2 - Strongly Reciprocal is available at:
   release/licenses/CERN-OHL-S-2.0.txt
+
+Hardware Attribution Notice:
+The MADpilot-H7 hardware design derives from and builds upon the open-hardware LEVIA-H7 project by piecol (https://github.com/piecol/LEVIA-H7), licensed under CERN-OHL-S-2.0. Secondary architecture and pin allocations cite SAL-FC by Saleh Alhomeidy, Akaki Gvelesiani, and Levan Kazaishvili (https://github.com/salehali22/SAL-FC), also licensed under CERN-OHL-S-2.0. All modified and derived hardware source files are distributed under CERN-OHL-S-2.0.
 
 3. Documentation and Other Project Materials
 Documentation, specifications, and project management artifacts (including docs/, PLAN.md, and CONTEXT.md) are licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0), or alternatively under CERN-OHL-S-2.0 / GPLv3 as applicable to their context.

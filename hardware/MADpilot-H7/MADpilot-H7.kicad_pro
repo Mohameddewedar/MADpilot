@@ -1,0 +1,88 @@
+{
+  "board": {
+    "design_settings": {
+      "rules": {}
+    }
+  },
+  "boards": [],
+  "cvpcb": {
+    "equivalence_files": []
+  },
+  "erc": {
+    "erc_exclusions": [],
+    "meta": {
+      "version": 0
+    },
+    "rule_severities": {}
+  },
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "MADpilot-H7.kicad_pro",
+    "version": 1
+  },
+  "net_settings": {
+    "classes": []
+  },
+  "pcbnew": {
+    "last_paths": {
+      "gencad": "",
+      "idf": "",
+      "netlist": "",
+      "plot": "",
+      "pos": "",
+      "specctra_dsn": "",
+      "step": "",
+      "svg": "",
+      "vrml": ""
+    },
+    "page_layout_descr_file": ""
+  },
+  "schematic": {
+    "annotate_start_num": 1,
+    "drawing": {
+      "dashed_lines_dash_length_ratio": 12.0,
+      "dashed_lines_gap_length": 0.5,
+      "default_line_thickness": 0.1524,
+      "default_text_size": 1.27,
+      "field_names": [],
+      "intersheets_ref_own_page": false,
+      "intersheets_ref_prefix": "",
+      "intersheets_ref_short": false,
+      "intersheets_ref_show": false,
+      "intersheets_ref_suffix": "",
+      "junction_size_choice": 3,
+      "junction_size_mult": 1.0,
+      "pin_symbol_size": 0.0,
+      "text_offset_ratio": 0.15
+    },
+    "legacy_lib_dir": "",
+    "legacy_lib_list": [],
+    "meta": {
+      "version": 1
+    },
+    "net_format_name": "",
+    "ngspice": {
+      "meta": {
+        "version": 0
+      }
+    },
+    "page_layout_descr_file": "",
+    "plot_directory": "",
+    "subpart_first_id": 65,
+    "subpart_id_separator": 0
+  },
+  "sheets": [
+    [
+      "9363845b-7b06-44ea-8b43-b26a6ef4e098",
+      ""
+    ]
+  ],
+  "text_variables": {
+    "BASE_DESIGN": "LEVIA-H7 by piecol (CERN-OHL-S-2.0)",
+    "PROJECT_NAME": "MADpilot-H7",
+    "REVISION": "Rev A"
+  }
+}

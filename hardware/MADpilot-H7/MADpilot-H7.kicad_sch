@@ -1,0 +1,22 @@
+(kicad_sch
+  (version 20231120)
+  (generator "eeschema")
+  (generator_version "8.0")
+  (uuid "9363845b-7b06-44ea-8b43-b26a6ef4e098")
+  (paper "A3")
+  (title_block
+    (title "MADpilot-H7 Flight Controller")
+    (date "2026-09-08")
+    (rev "Rev A")
+    (company "MADpilot Open Hardware Project")
+    (comment 1 "Base Design: LEVIA-H7 by piecol (CERN-OHL-S-2.0)")
+    (comment 2 "Target MCU: STM32H743IIT6 (LQFP-176)")
+    (comment 3 "Reference Board Standard: Pixhawk 6C (DS-018)")
+    (comment 4 "License: CERN-OHL-S-2.0")
+  )
+  (sheet_instances
+    (path "/"
+      (page "1")
+    )
+  )
+)

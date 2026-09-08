@@ -34,6 +34,13 @@ The rule that a design may only freeze when every BOM part is procurable from th
 The Pixhawk 6C — the standard every Improvement Backlog delta is measured against.
 _Avoid_: clone target, baseline
 
+**Base Design**:
+The open-hardware KiCad project used as the EDA starting point for schematic capture. Currently LEVIA-H7, adapted from TFBGA-100 to LQFP-176. Distinct from the Reference Board.
+_Avoid_: template, clone source
+
+**G0 Review Package**:
+The bundle of deliverables submitted to the external reviewer before the Rev A order: schematic exports, BOM, pin plan, and delta documentation.
+
 **Radio Allowance**:
 The standing pre-approved radio bands: 433 MHz, 915 MHz, 2.4 GHz, 5 GHz. Any other band is assumed allowed until confirmed with the project owner.
 

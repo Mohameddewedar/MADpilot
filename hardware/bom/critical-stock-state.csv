@@ -1,0 +1,16 @@
+part_number,description,lcsc_part,stock_quantity,lifecycle_state,unit_price,product_url
+STM32H743IIT6,High-performance ARM Cortex-M7 MCU 480MHz 2MB Flash 1MB RAM LQFP-176,C89597,27,normal,11.1152,https://www.lcsc.com/product-detail/C89597.html
+ICM-42605,Primary 6-axis IMU (3-axis Gyro + 3-axis Accel) SPI1 LGA-14(2.5x3),C2655099,8,normal,9.5109,https://www.lcsc.com/product-detail/C2655099.html
+BMI270,Secondary 6-axis IMU (16-bit Gyro + Accel) SPI4 LGA-14(2.5x3),C2836813,5644,normal,3.2631,https://www.lcsc.com/product-detail/C2836813.html
+MS561101BA03-50,High-precision barometric pressure sensor I2C2 QFN-8(3x5),C15639,3071,normal,6.7601,https://www.lcsc.com/product-detail/C15639.html
+AP63205WU-7,Main 5V 2A Synchronous DC-DC Buck Converter 3.8V-32V In TSOT-23-6,C2071056,28917,normal,0.4336,https://www.lcsc.com/product-detail/C2071056.html
+AP7343-33W5-7,3V3_SENS Ultra-low-noise 300mA LDO 60dB PSRR 33uVrms SOT-25,C460383,605,normal,0.3618,https://www.lcsc.com/product-detail/C460383.html
+AP2112K-3.3TRG1,3V3_MCU 600mA Low Dropout Linear Regulator with Enable SOT-25,C51118,62760,normal,0.1726,https://www.lcsc.com/product-detail/C51118.html
+SN65HVD230DR,3.3V CAN-Bus Transceiver ISO 11898-2 SOIC-8 (CAN1),C12084,55975,normal,0.6989,https://www.lcsc.com/product-detail/C12084.html
+SIT1051ATK/3,High-speed CAN-FD Transceiver with 3.3V VIO DFN-8(3x3) (CAN2),C5382552,5307,normal,0.4994,https://www.lcsc.com/product-detail/C5382552.html
+NX3225GD-8MHZ-STD-CRA-3,8.000MHz +/-15ppm 8pF passive quartz crystal SMD3225-2P (HSE Clock),C889706,50985,normal,0.3456,https://www.lcsc.com/product-detail/C889706.html
+CSTNE8M00GH5C000R0,8.000MHz ceramic resonator built-in 15pF caps SMD3213-3P (HSE Clock Alt),C341525,116300,normal,0.2408,https://www.lcsc.com/product-detail/C341525.html
+TF-01A,MicroSD (TF) Card Socket Push-Push SMD 9-pin with Card Detect,C91145,223295,normal,0.1937,https://www.lcsc.com/product-detail/C91145.html
+TYPE-C-31-M-12,USB Type-C 16-pin Receptacle SMD with TH Shield Shell Tabs,C165948,274725,normal,0.1873,https://www.lcsc.com/product-detail/C165948.html
+USBLC6-2P6,High-speed USB 2.0 2-line ESD Protection Array SOT-666-6,C15999,7455,normal,0.2852,https://www.lcsc.com/product-detail/C15999.html
+USBLC6-2SC6,High-speed USB 2.0 2-line ESD Protection Array SOT-23-6 (Alt),C7519,40995,normal,0.1844,https://www.lcsc.com/product-detail/C7519.html
