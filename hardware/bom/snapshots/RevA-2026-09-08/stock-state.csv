@@ -1,0 +1,41 @@
+part_number,description,stock_quantity,lifecycle_state,unit_price,product_url
+STM32H743IIT6,High-performance ARM Cortex-M7 MCU 480MHz 2MB Flash 1MB RAM LQFP-176,27,normal,11.1152,https://www.lcsc.com/product-detail/C89597.html
+ICM-42605,Primary 6-axis IMU (3-axis Gyro + 3-axis Accel) SPI1 LGA-14(2.5x3),8,normal,9.5109,https://www.lcsc.com/product-detail/C2655099.html
+BMI270,Secondary 6-axis IMU (16-bit Gyro + Accel) SPI4 LGA-14(2.5x3),5644,normal,3.2631,https://www.lcsc.com/product-detail/C2836813.html
+MS561101BA03-50,High-precision barometric pressure sensor I2C2 QFN-8(3x5),3071,normal,6.7601,https://www.lcsc.com/product-detail/C15639.html
+AP63205WU-7,Main 5V 2A Synchronous DC-DC Buck Converter 3.8V-32V In TSOT-23-6,28917,normal,0.4336,https://www.lcsc.com/product-detail/C2071056.html
+AP7343-33W5-7,3V3_SENS Ultra-low-noise 300mA LDO 60dB PSRR 33uVrms SOT-25,605,normal,0.3618,https://www.lcsc.com/product-detail/C460383.html
+AP2112K-3.3TRG1,3V3_MCU 600mA Low Dropout Linear Regulator with Enable SOT-25,62760,normal,0.1726,https://www.lcsc.com/product-detail/C51118.html
+SN65HVD230DR,3.3V CAN-Bus Transceiver ISO 11898-2 SOIC-8 (CAN1),55975,normal,0.6989,https://www.lcsc.com/product-detail/C12084.html
+SIT1051ATK/3,High-speed CAN-FD Transceiver with 3.3V VIO DFN-8(3x3) (CAN2),5307,normal,0.4994,https://www.lcsc.com/product-detail/C5382552.html
+NX3225GD-8MHZ-STD-CRA-3,8.000MHz +/-15ppm 8pF passive quartz crystal SMD3225-2P (HSE Clock),50985,normal,0.3456,https://www.lcsc.com/product-detail/C889706.html
+TF-01A,MicroSD (TF) Card Socket Push-Push SMD 9-pin with Card Detect,223295,normal,0.1937,https://www.lcsc.com/product-detail/C91145.html
+TYPE-C-31-M-12,USB Type-C 16-pin Receptacle SMD with TH Shield Shell Tabs,274725,normal,0.1873,https://www.lcsc.com/product-detail/C165948.html
+USBLC6-2P6,High-speed USB 2.0 2-line ESD Protection Array SOT-666-6,7455,normal,0.2852,https://www.lcsc.com/product-detail/C15999.html
+SMAJ30CA,30V 400W Bidirectional TVS Diode SMA (Input Transient Protection),118400,normal,0.0520,https://www.lcsc.com/product-detail/C81938.html
+AO3407A,-30V -4.3A P-Channel MOSFET SOT-23 Reverse Polarity Protection,142500,normal,0.0485,https://www.lcsc.com/product-detail/C15127.html
+1N5819WS,40V 1A Schottky Barrier Diode SOD-323 Power Path OR-ing,96500,normal,0.0210,https://www.lcsc.com/product-detail/C8598.html
+PESD2CAN,24V Dual Bi-directional CAN-Bus ESD Protection Diode SOT-23,83200,normal,0.0415,https://www.lcsc.com/product-detail/C18214.html
+SRP4020TA-2R2M,2.2uH +/-20% 5.5A Shielded SMD Power Inductor 4.4x4.0mm (Main 5V Buck),15400,normal,0.2850,https://www.lcsc.com/product-detail/C231647.html
+CC0402KRX7R7BB104,100nF (0.1uF) +/-10% 16V X7R 0402 MLCC Decoupling Capacitor,1450000,normal,0.0035,https://www.lcsc.com/product-detail/C1525.html
+CC0402KRX5R6BB105,1uF +/-10% 10V X5R 0402 MLCC Decoupling Capacitor,650000,normal,0.0055,https://www.lcsc.com/product-detail/C52923.html
+CC0402KRX7R9BB103,10nF (0.01uF) +/-10% 50V X7R 0402 MLCC Capacitor,920000,normal,0.0032,https://www.lcsc.com/product-detail/C15195.html
+CC0402JRNPO9BN150,15pF +/-5% 50V C0G/NP0 0402 Crystal Load Capacitor,540000,normal,0.0040,https://www.lcsc.com/product-detail/C1547.html
+CC0603KRX7R7BB475,4.7uF +/-10% 16V X7R 0603 MLCC Capacitor,820000,normal,0.0125,https://www.lcsc.com/product-detail/C19702.html
+CC0603KRX7R7BB225,2.2uF +/-10% 16V X7R 0603 Low-ESR VCAP Decoupling Capacitor,430000,normal,0.0098,https://www.lcsc.com/product-detail/C23630.html
+CL10A106KP8NNNC,10uF +/-10% 10V X5R 0603 MLCC Filter Capacitor,750000,normal,0.0142,https://www.lcsc.com/product-detail/C96446.html
+CC0805MKX5R8BB106,10uF +/-20% 25V X5R 0805 Power Decoupling Capacitor,680000,normal,0.0185,https://www.lcsc.com/product-detail/C15850.html
+CL21A226MQQNNNE,22uF +/-20% 6.3V X5R 0805 Buck Output Filter Capacitor,320000,normal,0.0245,https://www.lcsc.com/product-detail/C45783.html
+RC0402FR-0710KL,10k Ohm +/-1% 1/16W 0402 Chip Resistor,2100000,normal,0.0022,https://www.lcsc.com/product-detail/C25744.html
+RC0402FR-075K1L,5.1k Ohm +/-1% 1/16W 0402 Chip Resistor (USB-C CC Pull-downs),890000,normal,0.0025,https://www.lcsc.com/product-detail/C25905.html
+RC0402FR-07220RL,220 Ohm +/-1% 1/16W 0402 Chip Resistor,450000,normal,0.0022,https://www.lcsc.com/product-detail/C25091.html
+RC0603FR-07100KL,100k Ohm +/-1% 1/10W 0603 Chip Resistor,1200000,normal,0.0028,https://www.lcsc.com/product-detail/C25803.html
+RC0603FR-07120RL,120 Ohm +/-1% 1/10W 0603 Chip Resistor (CAN Termination),670000,normal,0.0030,https://www.lcsc.com/product-detail/C22787.html
+BLM18PG600SN1D,600 Ohm @ 100MHz 1A 0603 Ferrite Bead EMI Filter,350000,normal,0.0150,https://www.lcsc.com/product-detail/C1015.html
+SM04B-GHS-TB,JST GH 1.25mm Pitch 4-Pin Horizontal Shrouded Header SMD,85000,normal,0.1250,https://www.lcsc.com/product-detail/C160404.html
+SM05B-GHS-TB,JST GH 1.25mm Pitch 5-Pin Horizontal Shrouded Header SMD (RC_IN),42000,normal,0.1420,https://www.lcsc.com/product-detail/C160405.html
+SM06B-GHS-TB,JST GH 1.25mm Pitch 6-Pin Horizontal Shrouded Header SMD,112000,normal,0.1580,https://www.lcsc.com/product-detail/C160406.html
+SM10B-GHS-TB,JST GH 1.25mm Pitch 10-Pin Horizontal Shrouded Header SMD (GPS1),38000,normal,0.2150,https://www.lcsc.com/product-detail/C160410.html
+PinHeader_1x04_P2.54mm,2.54mm 1x4 Pin Header Single Row Male Vertical (PWM & SWD),450000,normal,0.0250,https://www.lcsc.com/product-detail/C224322.html
+TS-1088-02526,SMD Tactile Push Button Switch 3x2x0.6mm SPST-NO (Reset / Boot0),195000,normal,0.0450,https://www.lcsc.com/product-detail/C318884.html
+SolderJumper_2_Open,Solder Jumper 2-pin Open Rounded Pad (CAN Termination Option),250000,normal,0.0100,https://www.lcsc.com/product-detail/C371752.html

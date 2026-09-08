@@ -1,0 +1,17 @@
+{
+  "revision": "RevA",
+  "snapshot_date": "2026-09-08",
+  "bom_file": "MADpilot-H7-RevA-bom.csv",
+  "notes": "Rev A In-Stock-First Schematic BOM Freeze",
+  "operator": "",
+  "assembly_house": "JLCPCB",
+  "part_fields": [
+    "part_number",
+    "description",
+    "stock_quantity",
+    "lifecycle_state",
+    "unit_price",
+    "product_url"
+  ],
+  "part_count": 40
+}
