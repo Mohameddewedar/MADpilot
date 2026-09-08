@@ -1,0 +1,86 @@
+(kicad_sch
+  (version 20231120)
+  (generator "eeschema")
+  (generator_version "8.0")
+  (uuid "d734e101-5231-4ec1-9871-332918bb7a07")
+  (paper "A3")
+  (title_block
+    (title "MADpilot-H7 - SWD Debug Interface")
+    (date "2026-09-08")
+    (rev "Rev A")
+    (company "MADpilot Open Hardware Project")
+    (comment 1 "Standard 4-Pin SWD Header (3.3V, SWDIO, SWCLK, GND)")
+    (comment 2 "Target Port: STM32H743 PA13/PA14 with Hardware Pull-up/Pull-down")
+    (comment 3 "License: CERN-OHL-S-2.0")
+  )
+  (lib_symbols
+    (symbol "Connector:Conn_01x04_Pin"
+      (pin_names (offset 1.016))
+      (exclude_from_sim no)
+      (in_bom yes)
+      (on_board yes)
+      (property "Reference" "J" (at 0 6.35 0) (effects (font (size 1.27 1.27))))
+      (property "Value" "Conn_01x04_Pin" (at 0 -6.35 0) (effects (font (size 1.27 1.27))))
+      (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+      (symbol "Conn_01x04_Pin_1_1"
+        (pin passive line (at 5.08 3.81 180) (length 2.54) (name "Pin_1") (number "1"))
+        (pin passive line (at 5.08 1.27 180) (length 2.54) (name "Pin_2") (number "2"))
+        (pin passive line (at 5.08 -1.27 180) (length 2.54) (name "Pin_3") (number "3"))
+        (pin passive line (at 5.08 -3.81 180) (length 2.54) (name "Pin_4") (number "4"))
+      )
+    )
+    (symbol "power:GND"
+      (power global)
+      (pin_numbers (hide yes))
+      (pin_names (offset 0) (hide yes))
+      (property "Reference" "#PWR" (at 0 -6.35 0) (effects (font (size 1.27 1.27)) (hide yes)))
+      (property "Value" "GND" (at 0 -3.81 0) (effects (font (size 1.27 1.27))))
+      (symbol "GND_0_1"
+        (polyline (pts (xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)) (stroke (width 0) (type default)))
+      )
+      (symbol "GND_1_1"
+        (pin power_in line (at 0 0 270) (length 0) (name "") (number "1"))
+      )
+    )
+    (symbol "power:3V3_MCU"
+      (power global)
+      (pin_numbers (hide yes))
+      (pin_names (offset 0) (hide yes))
+      (property "Reference" "#PWR" (at 0 -3.81 0) (effects (font (size 1.27 1.27)) (hide yes)))
+      (property "Value" "3V3_MCU" (at 0 3.556 0) (effects (font (size 1.27 1.27))))
+      (symbol "3V3_MCU_0_1"
+        (polyline (pts (xy -0.762 1.27) (xy 0 2.54)) (stroke (width 0) (type default)))
+        (polyline (pts (xy 0 2.54) (xy 0.762 1.27)) (stroke (width 0) (type default)))
+        (polyline (pts (xy 0 0) (xy 0 2.54)) (stroke (width 0) (type default)))
+      )
+      (symbol "3V3_MCU_1_1"
+        (pin power_in line (at 0 0 90) (length 0) (name "") (number "1"))
+      )
+    )
+  )
+
+  (hierarchical_label "3V3_MCU" (shape input) (at 30.48 40.64 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "772a76f2-c167-4a7b-a5d6-6ecda721c001"))
+  (hierarchical_label "GND" (shape passive) (at 30.48 45.72 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "772a76f2-c167-4a7b-a5d6-6ecda721c002"))
+  (hierarchical_label "SWDIO" (shape bidirectional) (at 30.48 55.88 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "772a76f2-c167-4a7b-a5d6-6ecda721c003"))
+  (hierarchical_label "SWCLK" (shape input) (at 30.48 60.96 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "772a76f2-c167-4a7b-a5d6-6ecda721c004"))
+
+  (global_label "3V3_MCU" (shape bidirectional) (at 50.8 40.64 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "d77b7701-d72b-423c-a982-f192aa7a0001"))
+  (global_label "GND" (shape bidirectional) (at 50.8 45.72 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "d77b7701-d72b-423c-a982-f192aa7a0002"))
+  (global_label "SWDIO" (shape bidirectional) (at 60.96 55.88 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "d77b7701-d72b-423c-a982-f192aa7a0003"))
+  (global_label "SWCLK" (shape input) (at 60.96 60.96 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "d77b7701-d72b-423c-a982-f192aa7a0004"))
+
+  (symbol (lib_id "Connector:Conn_01x04_Pin") (at 91.44 60.96 0) (unit 1) (uuid "c701a1a1-7004-4001-9a10-000000000001")
+    (property "Reference" "J701" (at 91.44 48.26 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SWD" (at 91.44 50.8 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" (at 91.44 60.96 0) (effects (font (size 1.27 1.27)) (hide yes)))
+    (property "Description" "ARM Serial Wire Debug 4-pin Header (3.3V, SWDIO, SWCLK, GND)" (at 91.44 60.96 0) (effects (font (size 1.27 1.27)) (hide yes)))
+    (pin "1" (uuid "c7010001-0000-0000-0000-000000000001"))
+    (pin "2" (uuid "c7010002-0000-0000-0000-000000000002"))
+    (pin "3" (uuid "c7010003-0000-0000-0000-000000000003"))
+    (pin "4" (uuid "c7010004-0000-0000-0000-000000000004"))
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
