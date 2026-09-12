@@ -6,9 +6,21 @@ Solo-professional core with an on-demand pool. One person may hold several roles
 |---|---|---|---|
 | Hardware lead | Project owner | — | Professional PCB/KiCad |
 | Firmware lead | Project owner | — | Professional embedded C/C++ |
+| PCB Design Engineer | Mohamed Talha ([@M-TaLhA56](https://github.com/M-TaLhA56)) | — | PCB outline, stackup, component placement, 6-layer routing & DRC |
 | Flight-test pilots | Ready pool | Mostly free | Available now; also witness flight Phase Gates (G3–G7) |
 | External reviewer (gate G0) | **TBD** — identify before schematic capture completes | $0–300 | Mandatory schematic + layout review before the Rev A order |
 | Outsource pool | Per checkpoint | Mostly free, occasionally paid | Engaged per the Outsource-on-Stall policy |
+
+## PCB Design Engineer — Mohamed Talha
+
+**Engineer:** Mohamed Talha ([@M-TaLhA56](https://github.com/M-TaLhA56))  
+**Role:** PCB Design Engineer (Rev A Physical Layout & Manufacturing Preparation)
+
+**Responsibilities:**
+1. **Board Geometry & Stackup Configuration:** Define the PCB outline (~50x65 mm envelope) with mounting holes and configure the JLCPCB 6-layer stackup (JLC06161H-3313, 1.6 mm, ENIG) in KiCad.
+2. **Component Floorplanning & Placement (Issue #16 / T6):** Place the STM32H743 (LQFP-176), dual dissimilar IMUs (ICM-42605 and BMI270) near board CG, isolated 5V/3.3V power stages, and edge-aligned Pixhawk DS-018 JST-GH connectors.
+3. **6-Layer Routing & DRC Clean-Up (Issue #17 / T7):** Execute impedance-controlled differential pair routing (USB-C, SDMMC), solid ground reference plane pours on L2/L5, power distribution, and satisfy all JLCPCB 6-layer DFM/DRC rules.
+4. **G0 Review & Order Preparation (Issues #18–#19 / T8–T9):** Support assembly of layout screenshots, Gerbers, and drill files for the external G0 design review, and incorporate any layout findings prior to PCBA fabrication.
 
 ## G0 External Reviewer — Placeholder
 
