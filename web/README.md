@@ -46,12 +46,24 @@ From the repository root:
 python -m web
 ```
 
-The application will start on `http://127.0.0.1:8765`.
+The application starts on **all local network interfaces** by default: it prints both `http://127.0.0.1:8765` and your LAN address (e.g. `http://192.168.1.10:8765`), so phones and other devices on the same network can open it. The app is read-only and has no authentication — anyone on your network can browse it.
 
-To specify custom host or port:
+To bind localhost only:
 
 ```bash
-PORT=9000 HOST=127.0.0.1 python -m web
+HOST=127.0.0.1 python -m web
+```
+
+On Windows PowerShell, set environment variables first:
+
+```powershell
+$env:HOST = "127.0.0.1"; python -m web
+```
+
+To specify a custom port:
+
+```bash
+PORT=9000 python -m web
 ```
 
 ## Route Map
