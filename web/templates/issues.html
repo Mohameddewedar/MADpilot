@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}GitHub Issues — MADpilot{% endblock %}
+
+{% block content %}
+<div class="issues-container">
+  <header class="issues-header">
+    <div class="issues-title-area">
+      <h1>GitHub Issues</h1>
+      <span class="repo-badge">Mohameddewedar/MADpilot</span>
+    </div>
+    <div class="issues-controls">
+      {% if not no_cache %}
+        {% if expand_all %}
+          <a href="/issues" class="btn btn-secondary">Collapse all descriptions</a>
+        {% else %}
+          <a href="?expand=all" class="btn btn-secondary">Expand all descriptions</a>
+        {% endif %}
+      {% endif %}
+      <a href="?refresh=1" class="btn btn-primary" title="Re-fetch open issues from GitHub">🔄 Refresh</a>
+    </div>
+  </header>
+
+  {% if no_cache %}
+    <!-- no_cache state: honest error page with gh stderr tail -->
+    <div class="issues-error-card" role="alert">
+      <div class="error-header">
+        <span class="error-icon">❌</span>
+        <h2>Unable to load GitHub issues</h2>
+      </div>
+      <p class="error-summary">
+        {% if error_kind == 'unauth' %}
+          <strong>GitHub CLI is not authenticated (exit code 4).</strong> Please run <code>gh auth login</code> on the host machine to grant access.
+        {% else %}
+          <strong>GitHub is unreachable.</strong> Network connection failed or the command failed, and no local cached issue data is available.
+        {% endif %}
+      </p>
+      {% if gh_stderr %}
+        <div class="stderr-section">
+          <h3>GitHub CLI Error Output (stderr tail):</h3>
+          <pre class="stderr-block">{{ gh_stderr }}</pre>
+        </div>
+      {% endif %}
+      <div class="error-actions">
+        <a href="?refresh=1" class="btn btn-primary">Retry fetching issues</a>
+      </div>
+    </div>
+  {% else %}
+
+    {% if degraded %}
+      <!-- Degraded state: prominent banner -->
+      <div class="issues-banner-degraded" role="alert">
+        <div class="banner-content">
+          <span class="banner-icon">⚠️</span>
+          <span class="banner-text">
+            <strong>Showing CACHED issue data from {{ cached_at }} — {% if error_kind == 'unauth' %}gh not authenticated{% else %}GitHub unreachable{% endif %}</strong>
+          </span>
+        </div>
+        {% if gh_stderr %}
+          <details class="banner-stderr-details">
+            <summary>View CLI error output</summary>
+            <pre class="stderr-block">{{ gh_stderr }}</pre>
+          </details>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if sections is defined and sections %}
+      {% set rendered_sections = sections %}
+    {% else %}
+      {% set ready_agent = [] %}
+      {% set ready_human = [] %}
+      {% if groups.ready is defined %}
+        {% for iss in groups.ready %}
+          {% set names = iss.labels | map(attribute='name') | list %}
+          {% if 'ready-for-agent' in names %}{% set _ = ready_agent.append(iss) %}{% endif %}
+          {% if 'ready-for-human' in names %}{% set _ = ready_human.append(iss) %}{% endif %}
+        {% endfor %}
+      {% endif %}
+      {% set rendered_sections = [
+        {'id': 'wayfinder', 'title': 'Wayfinder tickets', 'description': 'Wayfinder milestone and track tickets (wayfinder:*)', 'issues': groups.wayfinder if groups.wayfinder is defined else []},
+        {'id': 'ready-agent', 'title': 'Ready-for-agent', 'description': 'Approved specs ready for autonomous implementation', 'issues': ready_agent},
+        {'id': 'ready-human', 'title': 'Ready-for-human', 'description': 'Tasks requiring human implementation or physical hardware action', 'issues': ready_human},
+        {'id': 'work', 'title': 'Bugs & enhancements', 'description': 'Active development items (bug, enhancement)', 'issues': groups.work if groups.work is defined else []},
+        {'id': 'other', 'title': 'Other', 'description': 'Other open issues', 'issues': groups.other if groups.other is defined else []}
+      ] %}
+    {% endif %}
+
+    <div class="groups-container">
+      {% for section in rendered_sections %}
+        <section class="issue-group-section" id="section-{{ section.id }}">
+          <div class="group-header">
+            <div class="group-title-wrapper">
+              <h2>{{ section.title }}</h2>
+              <span class="group-count" title="{{ section.issues|length }} issues">{{ section.issues|length }}</span>
+            </div>
+            {% if section.description %}
+              <p class="group-desc">{{ section.description }}</p>
+            {% endif %}
+          </div>
+
+          {% if section.issues|length == 0 %}
+            <div class="empty-group">
+              <em>No open issues in this category.</em>
+            </div>
+          {% else %}
+            <div class="issue-list">
+              {% for issue in section.issues %}
+                <article class="issue-card" id="issue-{{ issue.number }}">
+                  <details class="issue-details" {% if expanded_issue == issue.number or expand_all %}open{% endif %}>
+                    <summary class="issue-summary">
+                      <div class="issue-summary-main">
+                        <span class="issue-number">
+                          <a href="{{ issue.url }}" target="_blank" rel="noopener noreferrer" title="View on GitHub">#{{ issue.number }}</a>
+                        </span>
+                        <span class="issue-title">{{ issue.title }}</span>
+                      </div>
+                      <div class="issue-summary-meta">
+                        <div class="issue-meta-items">
+                          <span class="issue-assignees" title="Assignees">
+                            {% if issue.assignees and issue.assignees|length > 0 %}
+                              👤 {{ issue.assignees | map(attribute='login') | join(', ') }}
+                            {% else %}
+                              <span class="unassigned">👤 Unassigned</span>
+                            {% endif %}
+                          </span>
+                          <span class="issue-date" title="{{ issue.updatedAt }}">
+                            🕒 Updated {{ issue.updatedAt[:10] }}
+                          </span>
+                        </div>
+                        <div class="issue-badges">
+                          {% for label in issue.labels %}
+                            {% set bg = label.color if label.color else '666666' %}
+                            {% set fg = contrast_color(bg) if contrast_color is defined else '#ffffff' %}
+                            <span class="label-badge" style="background-color: #{{ bg }}; color: {{ fg }};" {% if label.description %}title="{{ label.description }}"{% endif %}>
+                              {{ label.name }}
+                            </span>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </summary>
+
+                    <div class="issue-body-wrapper" id="body-wrapper-{{ issue.number }}">
+                      {% if expanded_issue == issue.number or expand_all %}
+                        <div class="markdown-body">
+                          {{ body_html(issue.number) | safe }}
+                        </div>
+                      {% else %}
+                        <div class="lazy-body-loader" hx-get="/issues/body/{{ issue.number }}" hx-trigger="click once" hx-target="#body-wrapper-{{ issue.number }}" hx-swap="innerHTML">
+                          <a href="?expand={{ issue.number }}#issue-{{ issue.number }}" class="btn-load-body">▶ Load issue description</a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </details>
+                </article>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </section>
+      {% endfor %}
+    </div>
+
+  {% endif %}
+</div>
+
+<style>
+  .issues-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #24292f;
+  }
+  .issues-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #d0d7de;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .issues-title-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .issues-title-area h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+  .repo-badge {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    color: #57606a;
+  }
+  .issues-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgba(27, 31, 36, 0.15);
+  }
+  .btn-primary {
+    background-color: #2da44e;
+    color: #ffffff;
+    border-color: rgba(27, 31, 36, 0.15);
+  }
+  .btn-primary:hover {
+    background-color: #2c974b;
+  }
+  .btn-secondary {
+    background-color: #f6f8fa;
+    color: #24292f;
+  }
+  .btn-secondary:hover {
+    background-color: #f3f4f6;
+  }
+  .issues-banner-degraded {
+    background-color: #fff8c5;
+    border: 1px solid #d4a72c;
+    border-radius: 6px;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #4d2d00;
+  }
+  .banner-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .banner-stderr-details {
+    margin-top: 0.5rem;
+  }
+  .banner-stderr-details summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #57606a;
+  }
+  .issues-error-card {
+    background: #ffebe9;
+    border: 1px solid #ff8182;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #cf222e;
+  }
+  .error-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .error-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  .error-summary {
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .stderr-section {
+    margin: 1rem 0;
+  }
+  .stderr-section h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+    color: #24292f;
+  }
+  .stderr-block {
+    background: #1f2328;
+    color: #f0f6fc;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .issue-group-section {
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .group-header {
+    background: #f6f8fa;
+    border-bottom: 1px solid #d0d7de;
+    padding: 0.75rem 1rem;
+  }
+  .group-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .group-title-wrapper h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .group-count {
+    background: #e1e4e8;
+    color: #57606a;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+  }
+  .group-desc {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #57606a;
+  }
+  .empty-group {
+    padding: 1.5rem;
+    color: #57606a;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .issue-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .issue-card {
+    border-bottom: 1px solid #eaeef2;
+  }
+  .issue-card:last-child {
+    border-bottom: none;
+  }
+  .issue-summary {
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+    background: #ffffff;
+    transition: background-color 0.15s ease;
+  }
+  .issue-summary:hover {
+    background-color: #f6f8fa;
+  }
+  .issue-summary-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .issue-number a {
+    color: #57606a;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .issue-number a:hover {
+    color: #0969da;
+    text-decoration: underline;
+  }
+  .issue-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1f2328;
+  }
+  .issue-summary-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #57606a;
+    padding-left: 1.8rem;
+  }
+  .issue-meta-items {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .unassigned {
+    color: #8c959f;
+  }
+  .issue-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .label-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+    line-height: 1.2;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .issue-body-wrapper {
+    background: #f8fafc;
+    border-top: 1px solid #eaeef2;
+    padding: 1.25rem 1.5rem;
+  }
+  .markdown-body {
+    background: #ffffff;
+    padding: 1rem 1.25rem;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .lazy-body-loader {
+    padding: 0.5rem 0;
+  }
+  .btn-load-body {
+    display: inline-block;
+    color: #0969da;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.3rem 0.6rem;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+  }
+  .btn-load-body:hover {
+    background: #f3f4f6;
+  }
+  .raw-markdown {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+  }
+</style>
+{% endblock %}
