@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}Progress — MADpilot{% endblock %}
+
+{% block content %}
+<div class="progress-page">
+  {% if error and cached_at %}
+  <div class="banner banner-cached" role="alert">
+    <div class="banner-badge">CACHED FALLBACK</div>
+    <div class="banner-text">
+      <strong>Showing CACHED progress data from {{ cached_at }} — parser error: {{ error }}</strong>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if error and not cached_at and not phases and not gates %}
+  <div class="error-view" role="alert">
+    <h1>Error Loading Progress</h1>
+    <p class="error-lead">Unable to parse <code>PLAN.md</code> and no previous cached state is available.</p>
+    <div class="error-box">
+      <strong>Parser Error:</strong>
+      <pre>{{ error }}</pre>
+    </div>
+    <p class="error-hint">Verify that <code>PLAN.md</code> exists at the repository root and contains the required sections: <em>Program overview</em>, <em>Phase gates</em>, <em>Action items</em>, and <em>Improvement Backlog</em>.</p>
+  </div>
+  {% else %}
+
+  <header class="progress-header">
+    <div class="header-main">
+      <h1>Progress Tracker</h1>
+      {% if generated_at %}
+      <span class="timestamp-meta">Generated: {{ generated_at }}</span>
+      {% endif %}
+    </div>
+
+    <!-- Client-side filter input -->
+    <div class="filter-controls">
+      <label for="progress-filter" class="filter-label">Filter:</label>
+      <input
+        type="search"
+        id="progress-filter"
+        class="filter-input"
+        placeholder="Filter gates, actions, backlog..."
+        aria-label="Filter progress items"
+      />
+      <span id="filter-count" class="filter-count"></span>
+    </div>
+  </header>
+
+  <!-- Current-phase summary -->
+  <section class="section-card current-phase-card">
+    <div class="card-header">
+      <span class="card-tag">ACTIVE PHASE</span>
+      <h2>{{ current_phase.name if current_phase else 'Phase 0 — Learn' }}</h2>
+    </div>
+    <div class="phase-meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Window</span>
+        <span class="meta-value">{{ current_phase.window if current_phase else 'M0–M2' }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Primary Goal</span>
+        <span class="meta-value">{{ current_phase.goal if current_phase else 'Dev-kit flying; fork + CI running; design underway' }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Exit Gate</span>
+        <span class="meta-value font-mono">{{ current_phase.exit_gate if current_phase else 'dev board flies stabilized; CI green' }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase table -->
+  <section class="section-card">
+    <h2>Program Overview</h2>
+    <div class="table-responsive">
+      <table class="data-table phase-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Window</th>
+            <th>Goal</th>
+            <th>Exit Gate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for phase in phases %}
+          <tr>
+            <td class="cell-name"><strong>{{ phase.name }}</strong></td>
+            <td class="cell-window">{{ phase.window }}</td>
+            <td class="cell-goal">{{ phase.goal }}</td>
+            <td class="cell-exit">{{ phase.exit_gate }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Gate ladder (G0–G9 with status styling) -->
+  <section class="section-card">
+    <div class="section-title-row">
+      <h2>Gate Ladder (G0–G9)</h2>
+      <span class="section-hint">Milestones</span>
+    </div>
+    <div class="gate-ladder" id="gate-ladder-list">
+      {% for gate in gates %}
+      <div class="gate-card gate-status-{{ gate.status }} filterable-item" data-filter-text="{{ gate.id }} {{ gate.title }} {{ gate.status }}">
+        <div class="gate-header">
+          <span class="gate-id">{{ gate.id }}</span>
+          <span class="gate-status-pill status-{{ gate.status }}">
+            {% if gate.status == 'met' %}
+              ✓ MET
+            {% elif gate.status == 'not-met' %}
+              ✗ NOT MET
+            {% else %}
+              ○ NOT REACHED
+            {% endif %}
+          </span>
+        </div>
+        <div class="gate-title">{{ gate.title }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Action items list -->
+  <section class="section-card">
+    <div class="section-title-row">
+      <h2>Action Items (Now)</h2>
+      <span class="section-hint">{{ action_items|length }} items</span>
+    </div>
+    <ol class="action-list" id="action-items-list">
+      {% for item in action_items %}
+      <li class="action-item filterable-item" data-filter-text="{{ item.title if item is mapping and 'title' in item else (item.text if item is mapping else item) }}">
+        <div class="action-content">
+          {{ item.title if item is mapping and 'title' in item else (item.text if item is mapping else item) }}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <!-- Improvement Backlog table -->
+  <section class="section-card">
+    <div class="section-title-row">
+      <h2>Improvement Backlog</h2>
+      <span class="section-hint">Decided at gates, never before</span>
+    </div>
+    <div class="table-responsive">
+      <table class="data-table backlog-table" id="backlog-table">
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th class="col-entry">Entry</th>
+            <th class="col-gate">Gate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in improvement_backlog %}
+          <tr class="filterable-item" data-filter-text="#{{ item.number }} {{ item.entry }} {{ item.gate }}">
+            <td class="cell-num font-mono">#{{ item.number }}</td>
+            <td class="cell-entry"><strong>{{ item.entry }}</strong></td>
+            <td class="cell-gate"><span class="gate-tag">{{ item.gate }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {% endif %}
+</div>
+
+<style>
+  .progress-page {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.5;
+  }
+  .banner {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .banner-cached {
+    background: #fffbeb;
+    border: 1px solid #f59e0b;
+    color: #92400e;
+  }
+  .banner-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #d97706;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+  }
+  .error-view {
+    background: #fef2f2;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    padding: 24px;
+    color: #991b1b;
+  }
+  .error-box {
+    background: #ffffff;
+    border: 1px solid #fca5a5;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 12px 0;
+  }
+  .error-box pre {
+    margin: 6px 0 0 0;
+    color: #b91c1c;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .progress-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+  }
+  .timestamp-meta {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .filter-input {
+    padding: 6px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    min-width: 260px;
+  }
+  .filter-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+  .filter-count {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  .section-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-card h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+  }
+  .section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .section-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  .current-phase-card {
+    border-left: 4px solid #2563eb;
+    background: #f8fafc;
+  }
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #2563eb;
+    margin-bottom: 4px;
+  }
+  .phase-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 2px;
+  }
+  .meta-value {
+    font-size: 0.95rem;
+    color: #1e293b;
+  }
+  .font-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  .data-table th, .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .data-table th {
+    background: #f1f5f9;
+    font-weight: 600;
+    color: #475569;
+  }
+  .data-table tr:hover {
+    background: #f8fafc;
+  }
+  .gate-ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .gate-card {
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .gate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .gate-id {
+    font-family: ui-monospace, monospace;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .gate-status-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.04em;
+  }
+  .status-met {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+  }
+  .gate-status-met {
+    border-left: 4px solid #22c55e;
+    background: #f0fdf4;
+  }
+  .status-not-met {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+  }
+  .gate-status-not-met {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
+  }
+  .status-not-reached {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+  }
+  .gate-status-not-reached {
+    border-left: 4px solid #94a3b8;
+    background: #f8fafc;
+  }
+  .gate-title {
+    font-size: 0.9rem;
+    color: #334155;
+  }
+  .action-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .action-item {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .action-item:last-child {
+    margin-bottom: 0;
+  }
+  .gate-tag {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #334155;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  .col-num {
+    width: 60px;
+  }
+</style>
+
+<script>
+  (function() {
+    var filterInput = document.getElementById('progress-filter');
+    if (!filterInput) return;
+
+    filterInput.addEventListener('input', function() {
+      var query = this.value.toLowerCase().trim();
+      var items = document.querySelectorAll('.filterable-item');
+      var visibleCount = 0;
+      var totalCount = items.length;
+
+      items.forEach(function(el) {
+        var text = el.getAttribute('data-filter-text') || el.textContent;
+        var match = query === '' || text.toLowerCase().indexOf(query) !== -1;
+        el.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      var countEl = document.getElementById('filter-count');
+      if (countEl) {
+        countEl.textContent = query ? (visibleCount + '/' + totalCount + ' visible') : '';
+      }
+    });
+  })();
+</script>
+{% endblock %}
