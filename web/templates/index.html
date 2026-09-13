@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard &bull; MADpilot Follow-up App{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <div class="page-header">
+    <div class="page-header-title">
+      <h1>Workspace Dashboard</h1>
+      <p class="text-muted">Local-only follow-up tool reading real MADpilot repository files at runtime.</p>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <!-- Feature: Docs Browser -->
+    <div class="card feature-card">
+      <div class="card-header">
+        <div class="card-title-wrap">
+          <h2>Docs Browser</h2>
+          <span class="badge badge-ready">Active</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="feature-desc">
+          Renders curated repo docs with live runtime inventory, cross-doc link rewriting, Pygments code syntax highlighting, and broken link detection.
+        </p>
+        <div class="feature-metrics">
+          <div class="metric">
+            <span class="metric-val">{{ docs_count }}</span>
+            <span class="metric-lbl">Curated Docs</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">{{ adr_count }}</span>
+            <span class="metric-lbl">ADRs</span>
+          </div>
+        </div>
+        <div class="quick-links">
+          <strong>Key Documents:</strong>
+          <ul>
+            <li><a href="/docs/PLAN.md">PLAN.md &mdash; Manufacturing Plan</a></li>
+            <li><a href="/docs/CONTEXT.md">CONTEXT.md &mdash; Project Context</a></li>
+            <li><a href="/docs/adr/">ADR Index &mdash; Architecture Decisions</a></li>
+            <li><a href="/docs/hardware/bom/CRITICAL-PARTS.md">Critical Parts Pre-Qualification</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="/docs/" class="btn btn-primary">Browse All Docs &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Feature: Progress Tracker -->
+    <div class="card feature-card {% if not features.get('progress', {}).get('available') %}feature-card-disabled{% endif %}">
+      <div class="card-header">
+        <div class="card-title-wrap">
+          <h2>Progress Tracker</h2>
+          {% if features.get('progress', {}).get('available') %}
+            <span class="badge badge-ready">Active</span>
+          {% else %}
+            <span class="badge badge-unbuilt">not yet built</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="feature-desc">
+          Machine-readable view of <code>PLAN.md</code>: phases, gates G0&ndash;G9 ladder status, action items, and Improvement Backlog with dated caching.
+        </p>
+        {% if not features.get('progress', {}).get('available') %}
+          <div class="unbuilt-notice">
+            <span class="unbuilt-pill">Lane 2 Feature</span>
+            <p class="text-sm">This feature module (<code>web/progress.py</code>) is being built in Lane 2 and will appear automatically once landed.</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="card-footer">
+        {% if features.get('progress', {}).get('available') %}
+          <a href="/progress" class="btn btn-primary">View Progress &rarr;</a>
+        {% else %}
+          <button class="btn btn-disabled" disabled title="Feature not yet built (Lane 2)">Not Yet Built</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Feature: GitHub Issues -->
+    <div class="card feature-card {% if not features.get('github_issues', {}).get('available') %}feature-card-disabled{% endif %}">
+      <div class="card-header">
+        <div class="card-title-wrap">
+          <h2>GitHub Issues</h2>
+          {% if features.get('github_issues', {}).get('available') %}
+            <span class="badge badge-ready">Active</span>
+          {% else %}
+            <span class="badge badge-unbuilt">not yet built</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="feature-desc">
+          Live open issues queried via <code>gh</code> CLI, grouped by labels (wayfinder, ready-for-agent, bug, etc.), with offline fallback cache.
+        </p>
+        {% if not features.get('github_issues', {}).get('available') %}
+          <div class="unbuilt-notice">
+            <span class="unbuilt-pill">Lane 3 Feature</span>
+            <p class="text-sm">This feature module (<code>web/github_issues.py</code>) is being built in Lane 3 and will appear automatically once landed.</p>
+          </div>
+        {% endif %}
+      </div>
+      <div class="card-footer">
+        {% if features.get('github_issues', {}).get('available') %}
+          <a href="/issues" class="btn btn-primary">View Issues &rarr;</a>
+        {% else %}
+          <button class="btn btn-disabled" disabled title="Feature not yet built (Lane 3)">Not Yet Built</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent / Key Documentation Section -->
+  {% if recent_docs %}
+  <div class="section-container">
+    <div class="section-header">
+      <h3>Recently Modified Documents</h3>
+      <a href="/docs/" class="text-sm">View full inventory ({{ docs_count }}) &rarr;</a>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Document Title</th>
+            <th>Path</th>
+            <th>Category</th>
+            <th>Size</th>
+            <th>Modified</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in recent_docs %}
+          <tr>
+            <td><a href="{{ doc.url }}" class="doc-link"><strong>{{ doc.title }}</strong></a></td>
+            <td><code class="path-code">{{ doc.rel_path }}</code></td>
+            <td><span class="category-tag">{{ doc.category }}</span></td>
+            <td>{{ doc.size_kb }} KB</td>
+            <td class="text-muted text-sm">{{ doc.mtime }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

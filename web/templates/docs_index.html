@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if is_adr %}ADR Index &bull; MADpilot{% else %}Documentation &bull; MADpilot{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="docs-index-container">
+  {% if is_adr %}
+    <!-- ADR Index View -->
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="/">&larr; Dashboard</a> / <a href="/docs/">Docs</a> / <span>ADR Index</span>
+      </div>
+      <div class="page-header-title">
+        <h1>Architecture Decision Records (ADRs)</h1>
+        <p class="text-muted">Binding architectural and policy decisions for the MADpilot project.</p>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 90px;">ADR #</th>
+              <th>Decision Title</th>
+              <th>Document Path</th>
+              <th style="width: 100px;">Size</th>
+              <th style="width: 160px;">Modified</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for adr in adrs %}
+            <tr>
+              <td><span class="badge badge-adr">ADR-{{ adr.adr_num }}</span></td>
+              <td>
+                <a href="{{ adr.url }}" class="doc-link">
+                  <strong>{{ adr.title }}</strong>
+                </a>
+              </td>
+              <td><code class="path-code">{{ adr.rel_path }}</code></td>
+              <td>{{ adr.size_kb }} KB</td>
+              <td class="text-muted text-sm">{{ adr.mtime }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-muted">No ADR files found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  {% else %}
+    <!-- Curated Documentation Inventory View -->
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="/">&larr; Dashboard</a> / <span>Docs</span>
+      </div>
+      <div class="header-with-actions">
+        <div class="page-header-title">
+          <h1>Curated Documentation</h1>
+          <p class="text-muted">Live runtime inventory of the curated subset (<code>docs/**</code>, <code>PLAN.md</code>, <code>CONTEXT.md</code>, <code>docs/adr/**</code>, <code>hardware/bom/**</code>).</p>
+        </div>
+        <div class="header-links">
+          <a href="/docs/adr/" class="btn btn-secondary">View ADR Index &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTMX Search Filter -->
+    <div class="search-bar-wrap">
+      <form method="get" action="/docs/" onsubmit="return false;">
+        <input
+          type="search"
+          name="q"
+          value="{{ query or '' }}"
+          placeholder="Filter by title, path, or category (e.g. plan, adr, bom, checklist)..."
+          hx-get="/docs/"
+          hx-trigger="input changed delay:150ms, search"
+          hx-target="#docs-list-container"
+          hx-select="#docs-list-container"
+          hx-push-url="true"
+          class="search-input"
+          autofocus
+        >
+      </form>
+    </div>
+
+    <div id="docs-list-container">
+      {% if query %}
+        <div class="filter-status">
+          <span>Found <strong>{{ docs|length }}</strong> matching document{% if docs|length != 1 %}s{% endif %} for "<em>{{ query }}</em>"</span>
+          <a href="/docs/" hx-get="/docs/" hx-target="#docs-list-container" hx-select="#docs-list-container" hx-push-url="true" class="clear-filter">Clear filter</a>
+        </div>
+      {% endif %}
+
+      {% if grouped_docs %}
+        {% for category, cat_docs in grouped_docs.items() %}
+        <div class="category-block">
+          <h3 class="category-heading">{{ category }} <span class="category-count">({{ cat_docs|length }})</span></h3>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Path</th>
+                  <th style="width: 100px;">Size</th>
+                  <th style="width: 160px;">Modified</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for doc in cat_docs %}
+                <tr>
+                  <td>
+                    <a href="{{ doc.url }}" class="doc-link">
+                      <strong>{{ doc.title }}</strong>
+                      {% if doc.is_adr %}<span class="badge badge-adr-small">ADR</span>{% endif %}
+                    </a>
+                  </td>
+                  <td><code class="path-code">{{ doc.rel_path }}</code></td>
+                  <td>{{ doc.size_kb }} KB</td>
+                  <td class="text-muted text-sm">{{ doc.mtime }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>No documents matched your search.</p>
+          <a href="/docs/" class="btn btn-secondary">Reset Filter</a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

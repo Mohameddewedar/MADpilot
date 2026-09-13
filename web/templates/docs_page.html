@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} &bull; MADpilot Docs{% endblock %}
+
+{% block content %}
+<div class="doc-viewer-container">
+  <!-- Top Breadcrumbs and Meta -->
+  <div class="doc-header">
+    <div class="breadcrumb">
+      <a href="/">&larr; Dashboard</a> / <a href="/docs/">Docs</a> / <span>{{ doc_path }}</span>
+    </div>
+    <div class="doc-meta-bar">
+      <div class="doc-meta-main">
+        <h1 class="doc-title">{{ title }}</h1>
+        <div class="doc-meta-details">
+          <code class="path-code">{{ doc_path }}</code>
+          <span class="meta-sep">&bull;</span>
+          <span>{{ size_kb }} KB</span>
+          <span class="meta-sep">&bull;</span>
+          <span>Last modified {{ mtime }}</span>
+        </div>
+      </div>
+      <div class="doc-actions">
+        <a href="/md/{{ doc_path }}" target="_blank" class="btn btn-secondary btn-sm" title="View raw document file on disk">Raw File</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="doc-layout {% if toc %}has-toc{% endif %}">
+    <article class="markdown-body">
+      {{ content|safe }}
+    </article>
+
+    {% if toc and toc.strip() %}
+    <aside class="doc-toc">
+      <div class="toc-inner">
+        <div class="toc-title">Table of Contents</div>
+        {{ toc|safe }}
+      </div>
+    </aside>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

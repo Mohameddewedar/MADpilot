@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MADpilot Follow-up App{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <a href="/" class="brand-link">
+          <span class="brand-title">MADpilot</span>
+          <span class="brand-badge">Follow-up App</span>
+        </a>
+      </div>
+      <nav class="nav-menu">
+        <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">Dashboard</a>
+        <a href="/docs/" class="nav-item {% if request.path.startswith('/docs') %}active{% endif %}">Docs</a>
+        {% if features.get('progress', {}).get('available') %}
+          <a href="/progress" class="nav-item {% if request.path.startswith('/progress') %}active{% endif %}">Progress</a>
+        {% else %}
+          <a href="/progress" class="nav-item nav-unbuilt" title="Progress tracker view not yet built (Lane 2)">Progress <span class="badge-unbuilt">not yet built</span></a>
+        {% endif %}
+        {% if features.get('github_issues', {}).get('available') %}
+          <a href="/issues" class="nav-item {% if request.path.startswith('/issues') %}active{% endif %}">Issues</a>
+        {% else %}
+          <a href="/issues" class="nav-item nav-unbuilt" title="GitHub Issues view not yet built (Lane 3)">Issues <span class="badge-unbuilt">not yet built</span></a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <span>MADpilot Follow-up App v1 &bull; Local Workspace Dashboard</span>
+      <span>Repo: <code>{{ repo_root.name if repo_root else 'MADpilot' }}</code></span>
+    </div>
+  </footer>
+</body>
+</html>
