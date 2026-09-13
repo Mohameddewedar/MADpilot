@@ -44,5 +44,9 @@ The bundle of deliverables submitted to the external reviewer before the Rev A o
 **Radio Allowance**:
 The standing pre-approved radio bands: 433 MHz, 915 MHz, 2.4 GHz, 5 GHz. Any other band is assumed allowed until confirmed with the project owner.
 
+**Program Lead**:
+The role title for the project's owner (Mohamed Alaa Dewedar) — solo-professional core; holds phase-gate and budget authority. Other docs' prose "project owner" refers to this role. Defined in TEAM.md.
+_Avoid_: project owner, program owner
+
 **Outsource-on-Stall**:
 The policy of outsourcing a checkpoint only once it has stalled, rather than by pre-plan.

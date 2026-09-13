@@ -4,12 +4,24 @@ Solo-professional core with an on-demand pool. One person may hold several roles
 
 | Role | Holder | Cost | Notes |
 |---|---|---|---|
-| Hardware lead | Project owner | — | Professional PCB/KiCad |
-| Firmware lead | Project owner | — | Professional embedded C/C++ |
+| Program Lead (solo core) | Mohamed Alaa Dewedar ([@Mohameddewedar](https://github.com/Mohameddewedar)) | — | Owns the program: phase-gate decisions, budget, Sell-Ready enforcement |
+| Hardware lead | Program Lead | — | Professional PCB/KiCad |
+| Firmware lead | Program Lead | — | Professional embedded C/C++ |
 | PCB Design Engineer | Mohamed Talha ([@M-TaLhA56](https://github.com/M-TaLhA56)) | — | PCB outline, stackup, component placement, 6-layer routing & DRC |
 | Flight-test pilots | Ready pool | Mostly free | Available now; also witness flight Phase Gates (G3–G7) |
 | External reviewer (gate G0) | **TBD** — identify before schematic capture completes | $0–300 | Mandatory schematic + layout review before the Rev A order |
 | Outsource pool | Per checkpoint | Mostly free, occasionally paid | Engaged per the Outsource-on-Stall policy |
+
+## Program Lead — Mohamed Alaa Dewedar
+
+**Lead:** Mohamed Alaa Dewedar ([@Mohameddewedar](https://github.com/Mohameddewedar))  
+**Role:** Program Lead (solo-professional core) — also holds Hardware lead and Firmware lead. The "project owner" referenced elsewhere in the docs (Radio Allowance confirmations, comparative review sign-offs) is this role.
+
+**Responsibilities:**
+1. **Program authority:** own the phase-gate decisions (G0–G9) and the Improvement Backlog calls (decided at gates, never before — PLAN.md).
+2. **Sell-Ready enforcement:** keep the project sellable at any moment — license path, trademark-safe naming, board/USB identity, source offer (CONTEXT.md).
+3. **Procurement & budget:** order against the $1,650–2,870 budget, split for EGP/CBE card-cap volatility (PLAN.md risks); In-Stock-First at every rev freeze.
+4. **Policy holder:** Outsource-on-Stall swaps, Outsource pool engagements, Egypt operating rules (customs declarations, Radio Allowance, flight permissions).
 
 ## PCB Design Engineer — Mohamed Talha
 
