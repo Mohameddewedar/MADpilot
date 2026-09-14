@@ -25,7 +25,7 @@ def _describe_urls(host: str, port: int) -> str:
 
 
 def main() -> None:
-    host = os.environ.get("HOST", "127.0.0.1")
+    host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "8765"))
     debug = os.environ.get("FLASK_DEBUG", "0").lower() in ("1", "true", "yes")
 
