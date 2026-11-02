@@ -35,7 +35,7 @@ The Pixhawk 6C — the standard every Improvement Backlog delta is measured agai
 _Avoid_: clone target, baseline
 
 **Base Design**:
-The open-hardware KiCad project used as the EDA starting point for schematic capture. Currently LEVIA-H7, adapted from TFBGA-100 to LQFP-176. Distinct from the Reference Board.
+The open-hardware project used as the schematic starting point for the Flight Controller's design. Currently LEVIA-H7. Distinct from the Reference Board.
 _Avoid_: template, clone source
 
 **G0 Review Package**:

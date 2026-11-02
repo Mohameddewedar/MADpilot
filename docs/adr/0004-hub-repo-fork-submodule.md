@@ -1,6 +1,6 @@
 # 0004 — Hub repo with the ArduPilot fork as a submodule
 
-The MADpilot repo is the permanent project hub — `docs/`, `hardware/` (the KiCad project), `hwdef/` staging, `PLAN.md`. ArduPilot lives as a GitHub fork, pinned as a git submodule inside the hub; CI builds firmware artifacts from the pinned fork ref. The OEM layer (defaults.parm, `AP_CUSTOM_FIRMWARE_STRING`) lives in the fork; the board hwdef lives in the hub until it is upstreamed.
+The MADpilot repo is the permanent project hub — `docs/`, `hardware/` (the Altium project), `hwdef/` staging, `PLAN.md`. ArduPilot lives as a GitHub fork, pinned as a git submodule inside the hub; CI builds firmware artifacts from the pinned fork ref. The OEM layer (defaults.parm, `AP_CUSTOM_FIRMWARE_STRING`) lives in the fork; the board hwdef lives in the hub until it is upstreamed.
 
 ## Considered Options
 

@@ -1,6 +1,6 @@
-# MADpilot-H7 KiCad Hardware Project
+# MADpilot-H7 Altium Hardware Project
 
-This directory contains the KiCad EDA project files (schematic capture and PCB layout) for the **MADpilot-H7** Flight Controller (Rev A).
+This directory is the target location for the Altium Designer schematic capture and PCB layout of the **MADpilot-H7** Flight Controller (Rev A). The editable Altium files are still to be delivered.
 
 ---
 
@@ -11,7 +11,7 @@ This directory contains the KiCad EDA project files (schematic capture and PCB l
 - **Reference Board:** Pixhawk 6C (DS-018 Pixhawk Connector Standard compliance per [docs/adr/0002-pixhawk-standard-connectors.md](../../docs/adr/0002-pixhawk-standard-connectors.md))
 - **Base Design:** LEVIA-H7 by piecol (per [docs/adr/0003-base-design-sal-fc-primary.md](../../docs/adr/0003-base-design-sal-fc-primary.md))
 - **Hardware Revision:** Rev A (Prototype)
-- **EDA Tool:** KiCad 8.x / 9.x
+- **EDA Tool:** Altium Designer (per PCB engineer; [ADR-0005](../../docs/adr/0005-altium-eda-tool.md))
 
 ---
 
@@ -33,7 +33,7 @@ MADpilot-H7 also references architectural and pin mapping principles from **SAL-
 
 ### Scope of Adaptation
 
-MADpilot-H7 is a fresh KiCad project implementing substantial architectural adaptations to fulfill fixed-wing UAV requirements:
+MADpilot-H7 is a fresh Altium project implementing substantial architectural adaptations to fulfill fixed-wing UAV requirements:
 1. **MCU Package Adaptation:** Re-targeted from LEVIA-H7's 8x8mm TFBGA-100 package to an accessible, inspectable LQFP-176 package (STM32H743IIT6).
 2. **Connector Modernization:** Replaced LEVIA's multi-rotor quad-ESC solder pads and headers with full Pixhawk-standard JST-GH locking connectors (DS-018: POWER1, POWER2, TELEM1, TELEM2, GPS1, GPS2, CAN1, CAN2, EXT I2C, RC) and a 12-channel 0.1" servo rail.
 3. **In-Stock-First Sensor Suite:** Retained dual dissimilar IMUs partitioned across DMA domains: Primary TDK ICM-42605 on SPI1 (D1 domain) and Secondary Bosch BMI270 on SPI4 (D2 domain), with MEAS MS5611 barometer on internal I2C2.
@@ -47,3 +47,14 @@ In compliance with **CERN-OHL-S-2.0**, all schematic designs, PCB layouts, bill 
 Full legal text is available at [release/licenses/CERN-OHL-S-2.0.txt](../../release/licenses/CERN-OHL-S-2.0.txt).
 
 Per [ADR-0001](../../docs/adr/0001-open-hardware-license-path.md), upon any commercial distribution or sale of manufactured hardware, complete source design files matching the manufactured revision are made available to the recipient under these terms.
+
+## 3. Altium Project Structure & Capture Status
+
+Per [ADR-0005](../../docs/adr/0005-altium-eda-tool.md), the EDA tool is Altium Designer. The planned project structure mirrors the retired KiCad hierarchy:
+
+- `MADpilot-H7.PrjPcb` — Altium project file
+- `MADpilot-H7.SchDoc` — root schematic instantiating 7 hierarchical sheets
+- `POWER.SchDoc`, `MCU.SchDoc`, `SENSORS.SchDoc`, `CAN.SchDoc`, `STORAGE.SchDoc`, `CONNECTORS.SchDoc`, `DEBUG.SchDoc`
+- `MADpilot-H7.PcbDoc` — 6-layer PCB layout
+
+**Capture status:** the Rev A schematic content was first captured in KiCad (git tag `kicad-revA`; those files were removed from the tree at the tool switch). The Altium capture must satisfy [docs/hardware/rev-a-schematic-requirements.md](../../docs/hardware/rev-a-schematic-requirements.md) and the [capture-to-routing gate](../../docs/hardware/rev-a-design-gates.md#capture-to-routing). The frozen RevA BOM (`../bom/MADpilot-H7-RevA-bom.csv`) and `MADpilot-H7-RevA-Schematics.pdf` remain historical reference records; they do not certify the redraw or current stock availability. Include LEVIA-H7 attribution in Altium metadata and schematic title blocks per ADR-0003.

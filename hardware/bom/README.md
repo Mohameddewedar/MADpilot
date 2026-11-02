@@ -11,7 +11,12 @@ The goal of this process is absolute reproducibility: a later re-order must be a
 
 ## When Snapshots Are Taken
 
-Snapshots occur at every formal **Rev freeze** mapped directly to the milestone gates in [PLAN.md](../../PLAN.md):
+Rev A has two checkpoints. Neither a positive historical stock count nor preliminary qualification authorizes an order:
+
+- **Preliminary qualification (before layout):** export the ERC-clean Altium BOM, reconcile it with the historical design, and record dated availability/lifecycle evidence for the intended assembly quantity and spares. Preserve the September 8 KiCad snapshot unchanged as historical evidence.
+- **Final manufacturing freeze (after G0, immediately before ordering):** reverify the complete BOM and seal a new dated snapshot even if no part number changed. Record verification time, catalog/quote evidence, available quantity and required quantity (BOM quantity per board × five assembled boards + assembly-house spares) for each part. Accept only active/normal lifecycle parts actually procurable through the chosen assembly service. LCSC stock alone does not establish JLCPCB Standard PCBA availability; record the assembler's confirmation, reservation or purchase evidence. Availability must cover required quantities. A stock-driven design substitution returns to G0 delta approval before purchase.
+
+Formal revision freezes map to the milestone gates in [PLAN.md](../../PLAN.md):
 
 1. **Rev A Freeze (Phase 1 — M2–M6)**:
    - **Trigger:** Gate **G0** (mandatory external schematic + layout review passed).
@@ -31,8 +36,8 @@ Each snapshot is stored in an immutable, dated directory under [snapshots/](snap
 `hardware/bom/snapshots/<rev>-<YYYY-MM-DD>/`
 
 Inside the directory:
-1. **Original KiCad BOM CSV (`<bom_filename>.csv`)**:
-   - The verbatim CSV export from KiCad at the moment design freeze was declared.
+1. **Original BOM CSV (`<bom_filename>.csv`)**:
+   - The verbatim CSV export from the EDA tool (Altium per [ADR-0005](../../docs/adr/0005-altium-eda-tool.md); the Rev A snapshot predates the switch and was exported from KiCad) at the moment design freeze was declared.
 2. **Procurement State Record (`stock-state.csv`)**:
    - Pre-populated with the BOM's part numbers and descriptions, derived from [template/stock-state.template.csv](template/stock-state.template.csv).
    - Filled by the operator at freeze time with:
@@ -55,7 +60,7 @@ The snapshot is executed by the **Hardware Lead / Program Core** (solo-professio
 
 ## Immutability Rule
 
-Snapshots are **strictly immutable**. Once a snapshot directory is written:
+Sealed snapshots under `hardware/bom/snapshots/` are **strictly immutable**. Prepare and complete new drafts outside that directory. Once a snapshot is sealed:
 - It must never be edited, updated, or overwritten.
 - If component obsolescence or out-of-stock conditions force a BOM change before manufacturing, a new snapshot revision must be generated (e.g. `RevA1` or a new date stamp).
 - The snapshot script will refuse to overwrite an existing snapshot directory.
@@ -67,15 +72,23 @@ Snapshots are **strictly immutable**. Once a snapshot directory is written:
 To generate a snapshot, run [scripts/snapshot_bom.py](../../scripts/snapshot_bom.py) from the repository root:
 
 ```bash
-python scripts/snapshot_bom.py --bom path/to/kicad_bom.csv --rev RevA --notes "Rev A freeze for G0 order"
+python scripts/snapshot_bom.py --bom path/to/altium_bom.csv --rev RevA --out path/to/unsealed-bom-drafts --notes "Final manufacturing freeze; design commit <sha>; G0 approval <reference>"
 ```
 
 The script will:
 1. Validate the input CSV.
-2. Create `hardware/bom/snapshots/<rev>-<YYYY-MM-DD>/`.
+2. Create a new `<rev>-<YYYY-MM-DD>/` draft under the supplied `--out` directory.
 3. Copy the BOM file.
 4. Generate `stock-state.csv` pre-filled with part numbers.
 5. Generate `manifest.json`.
 6. Compute `SHA256SUMS` for the archive.
 
-The operator then inspects JLCPCB/LCSC inventory, updates `stock-state.csv` with verified stock quantities and URLs, and commits the snapshot to version control.
+The script initializes a draft; its blank stock fields and initial checksums do not certify procurement. Complete these steps before sealing:
+
+1. Populate `stock-state.csv` from current assembly-house evidence. Record required quantities, verification timestamp (including timezone), quote/reservation references, lifecycle, prices and product URLs in `procurement-evidence.md`. Account for every BOM row and every assembly spare; reconcile counts with `manifest.json`.
+2. Fill the manifest operator and assembly house, and identify the approved design commit, G0 approval, snapshot purpose and order quantity in its notes. Generate the BOM from that exact design revision.
+3. Recompute `SHA256SUMS` **after** completing the draft, covering BOM, stock state, manifest and procurement evidence. Independently verify every entry. The script's initial hashes become stale when stock state or manifest is filled in.
+4. Check that the destination `hardware/bom/snapshots/<rev>-<date>/` does not exist, then archive the completed draft there and commit it. Use a new revision suffix if another freeze occurs on the same day. Do not overwrite an existing snapshot or change the September 8 record.
+5. Record the sealed snapshot path in the manufacturing manifest alongside the reviewed design commit and fabrication-output checksums. Reconfirm availability when submitting the order; expired inventory/quote evidence requires fresh verification and a new sealed snapshot.
+
+Follow [Rev A design gates](../../docs/hardware/rev-a-design-gates.md#review-to-order) for final review acceptance and Program Lead approval. Unit tests against the historical snapshot verify its recorded integrity, not live stock or the final Altium design.

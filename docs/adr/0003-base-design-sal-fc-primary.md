@@ -26,3 +26,7 @@ In August 2026, the SAL-FC team moved all KiCad design files, Gerbers, BOM, and 
 - The comparative review methodology still diffs two independent H743 designs — only the roles are swapped.
 - CERN-OHL-S-2.0 attribution for LEVIA-H7 is required in the MADpilot-H7 project metadata and schematic title blocks.
 - The TFBGA-100 → LQFP-176 package adaptation is the primary schematic capture effort; the pin plan (comparative-review.md §7) already maps all signals to LQFP-176.
+
+## Amendment — EDA tool switched to Altium Designer (2026-09-13)
+
+Per [ADR-0005](0005-altium-eda-tool.md), the Rev A schematic capture moves from KiCad to Altium Designer at the PCB Design Engineer's request. The KiCad Rev A capture was tagged `kicad-revA` in git history and removed from the tree; this ADR's decision — LEVIA-H7 as Base Design, the TFBGA-100 → LQFP-176 adaptation, and Pixhawk-standard connectors (ADR-0002) — is unchanged. The frozen RevA BOM snapshot and `MADpilot-H7-RevA-Schematics.pdf` remain valid Rev A records, and the redraw must satisfy `docs/hardware/rev-a-schematic-requirements.md`.

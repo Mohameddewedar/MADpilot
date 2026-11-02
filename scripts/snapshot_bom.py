@@ -2,7 +2,7 @@
 """
 snapshot_bom.py - Create an immutable In-Stock-First BOM snapshot.
 
-Captures the frozen KiCad BOM, initializes a stock-state procurement verification
+Captures the frozen Altium BOM, initializes a stock-state procurement verification
 record, populates the manifest, and generates cryptographic checksums.
 """
 
@@ -92,7 +92,7 @@ def main() -> None:
         "--bom",
         required=True,
         type=Path,
-        help="Path to KiCad BOM CSV file",
+        help="Path to Altium BOM CSV file",
     )
     parser.add_argument(
         "--rev",

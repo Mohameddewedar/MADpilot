@@ -2,7 +2,7 @@
 
 Personal/educational manufacture of **MADpilot-H7**, a fixed-wing flight controller derived from open Pixhawk/ArduPilot data — kept **Sell-Ready** at all times. 12-month program, solo-professional core (TEAM.md), budget $1,650–2,870 (COST-ESTIMATE.md).
 
-Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0004) · `EQUIPMENT.md` (procurement) · `TEAM.md` (roles).
+Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0005) · `EQUIPMENT.md` (procurement) · `TEAM.md` (roles).
 
 ## Program overview
 
@@ -23,9 +23,12 @@ Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0004) · `E
 
 ## Phase 1 — Rev A (M2–M6)
 
-- Derive the KiCad project from LEVIA-H7 (Base Design, per ADR-0003 amendment), adapting from TFBGA-100 to LQFP-176; SAL-FC retained as firmware-mapping reference; **In-Stock-First** BOM freeze (ICM-42605, BMI270, MS5611, STM32H743 LQFP-176).
+- Derive the Altium project from LEVIA-H7 (Base Design, per ADR-0003 amendment; ADR-0005), adapting from TFBGA-100 to LQFP-176; SAL-FC retained as firmware-mapping reference; **In-Stock-First** BOM freeze (ICM-42605, BMI270, MS5611, STM32H743 LQFP-176).
 - Custom board support: `hwdef/MADpilotH7/hwdef.dat` + `hwdef-bl.dat`, `APJ_BOARD_ID 3141`, USB VID 0x1D50 + pid.codes PID; bootloader via `Tools/scripts/build_bootloaders.py`, flashed by SWD.
-- **G0: mandatory external schematic + layout review** before ordering (proactive, on top of the reactive Outsource-on-Stall policy).
+- Complete the Altium redraw against [Rev A schematic requirements](docs/hardware/rev-a-schematic-requirements.md), with ERC evidence and a reconciled preliminary BOM before layout; preserve the historical KiCad records.
+- Engage the external reviewer before schematic capture completes; reviewer booking proceeds independently of layout.
+- **G0: mandatory external schematic + layout review** before ordering (proactive, on top of the reactive Outsource-on-Stall policy). Apply the evidence and final approval rules in [Rev A design gates](docs/hardware/rev-a-design-gates.md).
+- Qualify the preliminary BOM before layout, then take a fresh full-BOM manufacturing freeze immediately before ordering, even if part numbers are unchanged; see [BOM process](hardware/bom/README.md).
 - Order: JLC 6-layer bare x10 + stencil + turnkey PCBA x5; hand-build one education board from a spare bare (hotplate + stencil).
 - Bring-up against G1/G2; **Sim-on-Hardware** (`Tools/scripts/sitl-on-hardware/sitl-on-hw.py`) before any taxi attempt.
 
@@ -44,7 +47,7 @@ Companions: `CONTEXT.md` (language) · `docs/adr/` (decisions 0001–0004) · `E
 
 ## Phase gates
 
-- **G0** external schematic + layout review passed (before any Rev A order)
+- **G0** external schematic + layout review passed for the final design revision, with written reviewer acceptance and Program Lead approval recorded before any Rev A order ([evidence requirements](docs/hardware/rev-a-design-gates.md#review-to-order))
 - **G1** bench bring-up: boots via SWD, bootloader flashed, GCS link over USB and telemetry, all sensors live, actuator sweep
 - **G2** Rev A complete: full sensor set logging on a vibration-realistic mount, no brownouts, current draw within budget
 - **G3** taxi · **G4** manual flight · **G5** FBWA + airspeed calibrated · **G6** autotune

@@ -10,5 +10,5 @@ The project is personal/educational now but must stay Sell-Ready at any moment. 
 ## Consequences
 
 - No obligation exists while nothing is distributed; education-phase boards stay private by default.
-- The moment any board is sold: modified KiCad sources are published under CERN-OHL-S-2.0, and the exact ArduPilot firmware source used is offered per GPLv3.
+- The moment any board is sold: modified hardware design sources (Altium, per ADR-0005) are published under CERN-OHL-S-2.0, and the exact ArduPilot firmware source used is offered per GPLv3.
 - Trademark rule: the product is never marketed with "Pixhawk" in its name; "Pixhawk" appears only in compatibility statements.
