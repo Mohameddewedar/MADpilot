@@ -6,7 +6,7 @@ In accordance with [CONTEXT.md](../CONTEXT.md) and [ADR-0001](../docs/adr/0001-o
 > *Publication is one checklist away, never a project.*
 
 During personal and educational development, no distribution occurs and design files remain private. However, the moment any Flight Controller board is sold or publicly distributed, legal obligations take effect immediately:
-1. Modified KiCad hardware design files must be published under **CERN-OHL-S-2.0** ([release/licenses/CERN-OHL-S-2.0.txt](licenses/CERN-OHL-S-2.0.txt)).
+1. Modified Altium hardware design files must be published under **CERN-OHL-S-2.0** ([release/licenses/CERN-OHL-S-2.0.txt](licenses/CERN-OHL-S-2.0.txt)).
 2. Complete Corresponding Source code of the exact ArduPilot firmware shipped must be offered under **GNU GPLv3** ([release/licenses/GPL-3.0.txt](licenses/GPL-3.0.txt)).
 
 This staging area contains pre-built templates, automation scripts, and verification checklists so that release activation can be executed on demand without scramble or delay.
@@ -42,9 +42,9 @@ This checklist maps 1:1 to the Sell-Ready **Prep-now** items defined in [PLAN.md
 - **Current Status**: *Complete and operational*.
 
 ### 5. In-Stock-First BOM Snapshots at Every Rev Freeze
-- **What "Done" Means**: Immutable, dated snapshots captured at each revision freeze (Rev A at Gate G0, Rev B at Gate G8) recording the exact KiCad BOM, verified per-part assembly house stock state (`stock-state.csv`), manifest, and cryptographic SHA256 checksums.
+- **What "Done" Means**: Immutable, dated snapshots captured at each revision freeze (Rev A at Gate G0, Rev B at Gate G8) recording the exact frozen EDA BOM, verified per-part assembly house stock state (`stock-state.csv`), manifest, and cryptographic SHA256 checksums.
 - **Where Artifact Lives**: [hardware/bom/README.md](../hardware/bom/README.md), [hardware/bom/snapshots/](../hardware/bom/snapshots/), and tooling in [scripts/snapshot_bom.py](../scripts/snapshot_bom.py).
-- **Current Status**: *Tooling and workflow established*; snapshots trigger at Gate G0 order review.
+- **Current Status**: Historical KiCad Rev A qualification snapshot archived on 2026-09-08. The Altium preliminary BOM must be reconciled before layout; a new complete manufacturing freeze with fresh assembly-house evidence is required after G0 immediately before ordering, even if part numbers are unchanged. See the [BOM process](../hardware/bom/README.md).
 
 ---
 

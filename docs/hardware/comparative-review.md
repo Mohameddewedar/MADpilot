@@ -3,7 +3,7 @@
 **Document ID:** MAD-HW-REV-001  
 **Target Hardware:** MADpilot-H7 Flight Controller (STM32H743, LQFP-176)  
 **Revision:** Rev A Bring-Up Draft (Pre-G0 Review)  
-**Binding Decisions:** [ADR-0001 (License Path & Trademark)](../adr/0001-open-hardware-license-path.md), [ADR-0002 (Pixhawk-Standard Connector Set)](../adr/0002-pixhawk-standard-connectors.md), [ADR-0003 (Base Design: SAL-FC Primary, LEVIA-H7 Cross-Check)](../adr/0003-base-design-sal-fc-primary.md), [ADR-0004 (Hub Repo & ArduPilot Submodule)](../adr/0004-hub-repo-fork-submodule.md)  
+**Binding Decisions:** [ADR-0001 (License Path & Trademark)](../adr/0001-open-hardware-license-path.md), [ADR-0002 (Pixhawk-Standard Connector Set)](../adr/0002-pixhawk-standard-connectors.md), [ADR-0003 (Base Design: LEVIA-H7, amended)](../adr/0003-base-design-sal-fc-primary.md), [ADR-0004 (Hub Repo & ArduPilot Submodule)](../adr/0004-hub-repo-fork-submodule.md)
 **Program Guides:** [CONTEXT.md](../../CONTEXT.md), [PLAN.md](../../PLAN.md)
 
 ---
@@ -16,8 +16,8 @@ The objective of MADpilot is educational and personal development while maintain
 
 ### Methodology
 In accordance with [ADR-0003](../adr/0003-base-design-sal-fc-primary.md), this review analyzes two independent open-hardware STM32H743 flight controller designs:
-1. **SAL-FC** as the primary base design reference.
-2. **LEVIA-H7** as the comparative second-opinion and validation cross-check.
+1. **LEVIA-H7** as the Base Design, per the 2026-09-07 amendment to ADR-0003.
+2. **SAL-FC** as the firmware-mapping and power-architecture cross-check.
 3. **Pixhawk 6C** as the **Reference Board** standard against which architectural deltas and connector compliance ([ADR-0002](../adr/0002-pixhawk-standard-connectors.md)) are benchmarked.
 
 Each design is examined across its electrical schematics, PCB layout and stackup, component procurement, power rail distribution, timer allocation, bus routing, and firmware definitions. Findings from both base designs are synthesized to construct a robust, conflict-free pin plan for the MADpilot-H7 in an LQFP-176 package.
@@ -25,7 +25,7 @@ Each design is examined across its electrical schematics, PCB layout and stackup
 ### Source Artifacts Catalog
 All comparative claims in this review cite concrete artifacts from the following sources:
 
-*   **SAL-FC (Primary Base Design)**:
+*   **SAL-FC (Firmware/Power Cross-Check)**:
     *   Remote Repository: [https://github.com/salehali22/SAL-FC](https://github.com/salehali22/SAL-FC)
     *   Remote Readme & Pinout: [https://raw.githubusercontent.com/salehali22/SAL-FC/main/README.md](https://raw.githubusercontent.com/salehali22/SAL-FC/main/README.md)
     *   Cited paths below are locations within the SAL-FC repository.
@@ -34,7 +34,7 @@ All comparative claims in this review cite concrete artifacts from the following
     *   Betaflight Target Configuration: [`SAL-FC: Firmware Target Files/Betaflight/target.h`](https://github.com/salehali22/SAL-FC/blob/main/Firmware%20Target%20Files/Betaflight/target.h) and [`SAL-FC: Firmware Target Files/Betaflight/config.h`](https://github.com/salehali22/SAL-FC/blob/main/Firmware%20Target%20Files/Betaflight/config.h)
     *   iNAV Target & SPI6 HAL Patch: `SAL-FC: Firmware Target Files/iNAV/spi6-patch/`
     *   License: [`SAL-FC: LICENSE`](https://github.com/salehali22/SAL-FC/blob/main/LICENSE) (CERN-OHL-S-2.0)
-*   **LEVIA-H7 (Comparative Cross-Check)**:
+*   **LEVIA-H7 (Base Design)**:
     *   Remote Repository: [https://github.com/piecol/LEVIA-H7](https://github.com/piecol/LEVIA-H7)
     *   Remote Readme: [https://raw.githubusercontent.com/piecol/LEVIA-H7/main/README.md](https://raw.githubusercontent.com/piecol/LEVIA-H7/main/README.md)
     *   Cited paths below are locations within the LEVIA-H7 repository.
@@ -75,10 +75,10 @@ All comparative claims in this review cite concrete artifacts from the following
 > 4. The CERN-OHL-S-2.0 license file.
 
 ### Impact on [ADR-0003](../adr/0003-base-design-sal-fc-primary.md)
-[ADR-0003](../adr/0003-base-design-sal-fc-primary.md) was predicated on deriving MADpilot-H7's KiCad schematics directly from SAL-FC's public EDA sources, with LEVIA-H7 serving as a comparative cross-check. Because SAL-FC's KiCad files are no longer in the public tree, that premise is weakened: MADpilot cannot fork SAL-FC's native `.kicad_sch` or `.kicad_pcb` files directly without external interaction.
+[ADR-0003](../adr/0003-base-design-sal-fc-primary.md) was predicated on deriving MADpilot-H7's schematics directly from SAL-FC's public EDA sources, with LEVIA-H7 serving as a comparative cross-check. Because SAL-FC's KiCad files are no longer in the public tree, that premise is weakened: MADpilot cannot fork SAL-FC's native `.kicad_sch` or `.kicad_pcb` files directly without external interaction.
 
-### Open Decision for Project Owner at Gate G0
-Before committing engineering hours to schematic capture in Phase 1, the project owner must decide between two paths:
+### Resolved Base Design Decision
+The Program Lead selected Option B on 2026-09-07; see the amendment to [ADR-0003](../adr/0003-base-design-sal-fc-primary.md). The alternatives below preserve the reasoning, not an open G0 choice. Capture uses Altium per [ADR-0005](../adr/0005-altium-eda-tool.md).
 
 *   **Option A: Request Private Hardware Access from SAL-FC Authors**  
     Contact the SAL-FC authors via the credentials listed in their README:
@@ -98,23 +98,23 @@ Before committing engineering hours to schematic capture in Phase 1, the project
 
 The table below contrasts SAL-FC and LEVIA-H7 across all critical electrical and firmware subsystems, alongside the proposed MADpilot-H7 implementation.
 
-| Subsystem | SAL-FC (Primary Reference) | LEVIA-H7 (Comparative Cross-Check) | MADpilot-H7 (Proposed Plan) | Primary Citations |
+| Subsystem | SAL-FC (Firmware/Power Reference) | LEVIA-H7 (Base Design) | MADpilot-H7 (Approved Rev A Plan) | Primary Citations |
 | :--- | :--- | :--- | :--- | :--- |
 | **MCU & Package** | STM32H743VIT6, LQFP-100 (480 MHz, 2MB Flash, 1MB RAM) | STM32H743VIHx, TFBGA-100 8x8mm 0.8mm pitch (480 MHz) | STM32H743IIT6, LQFP-176 (480 MHz, 2MB Flash, 1MB RAM) | SAL README Â§Hardware Specifications; LEVIA `MCU.kicad_sch` U2 |
-| **HSE Clock Source** | 8.000 MHz Oscillator (ASE-8.000MHZ-LC-T); `STM32_HSE_BYPASS` must NOT be defined | 8.000 MHz Ceramic Resonator (Murata CSTNE8M00G550000R0, 3-pin) | 8.000 MHz or 16.000 MHz TCXO / Crystal (Decision at G0) | SAL README Â§Flashing ArduPilot & `hwdef.dat` L11; LEVIA BOM `C341525` |
+| **HSE Clock Source** | 8.000 MHz Oscillator (ASE-8.000MHZ-LC-T); `STM32_HSE_BYPASS` must NOT be defined | 8.000 MHz Ceramic Resonator (Murata CSTNE8M00G550000R0, 3-pin) | Passive 8.000 MHz quartz crystal with load capacitors; no HSE bypass | SAL README Â§Flashing ArduPilot & `hwdef.dat` L11; LEVIA BOM `C341525` |
 | **Primary IMU** | TDK ICM-42688-P on SPI6 (PB3/PB4/PB5, CS: PD7, EXTI: PE4) | TDK ICM-42688-P on SPI1 (PA5/PA6/PD7, CS: PC15, EXTI: PB2) | TDK ICM-42605 on SPI1 (PA5/PA6/PD7, CS: PC15, EXTI: PB2) | SAL `target.h` L90-115; LEVIA `SENSORS.kicad_sch` U14; ADR-0003 |
-| **Secondary IMU** | Bosch BMI270 on SPI3 (PC10/PC11/PC12, CS: PD3, EXTI: PD2) | TDK ICM-42688-P on SPI4 (PE12/PE13/PE14, CS: PE11, EXTI: PE15) | Bosch BMI270 on SPI4 (PE2/PE5/PE6 or PE12-14, CS: PC13, EXTI: PE4) | SAL `target.h` L80-84; LEVIA `SENSORS.kicad_sch` U15; ADR-0003 |
+| **Secondary IMU** | Bosch BMI270 on SPI3 (PC10/PC11/PC12, CS: PD3, EXTI: PD2) | TDK ICM-42688-P on SPI4 (PE12/PE13/PE14, CS: PE11, EXTI: PE15) | Bosch BMI270 on SPI4 (PE2/PE5/PE6, CS: PC13, EXTI: PE4) | SAL `target.h` L80-84; LEVIA `SENSORS.kicad_sch` U15; ADR-0003 |
 | **Barometer** | Bosch BMP388 on I2C2 (PB10/PB11, Addr 0x76) | Infineon DPS368 on I2C2 (PB10/PB11, Addr 0x77) | MEAS MS5611 on I2C2 (PB10/PB11, Addr 0x76 / 0x77) | SAL `target.h` L101, L127; LEVIA `SENSORS.kicad_sch` U16; PLAN.md Â§Phase 0 |
 | **Magnetometer** | None onboard (External GPS/Compass puck on I2C4) | iSentek IST8310 onboard on I2C2 (PB10/PB11) | None onboard (External GNSS puck on I2C1; onboard gated to Rev C) | SAL `target.h` L122; LEVIA `SENSORS.kicad_sch` U17; PLAN.md Backlog #3 |
 | **Main 5V Buck** | Diodes Inc AP63205WU 5V 2A synchronous buck (32V max in) | TI LMR43620R5RPER 5V 2A synchronous buck (36V max in) | High-efficiency 5V 2A/3A synchronous buck (up to 6S / 36V in) | SAL README Â§Hardware Specifications; LEVIA `POWER.kicad_sch` U4 |
-| **Aux/VTX Buck** | TI TPS54302 9V/12V 3A buck (28V max in) | TI LMR604303 9V 3A buck (36V in) with GPIO enable (`PE5`) | Optional 9V 2A/3A buck (Proposal for G0 decision) | SAL README Â§Hardware Specifications; LEVIA `POWER.kicad_sch` U5 |
+| **Aux/VTX Buck** | TI TPS54302 9V/12V 3A buck (28V max in) | TI LMR604303 9V 3A buck (36V in) with GPIO enable (`PE5`) | Omitted for Rev A; external regulator if required | SAL README Â§Hardware Specifications; LEVIA `POWER.kicad_sch` U5 |
 | **3.3V Regulators** | Logic: AP2112K-3.3 (600mA); Sensors: AP7343-33W5-7 (300mA low-noise) | MCU: AP7361C-33FGE-7 (1A DFN-8); Sensors: AP7361C-33FGE-7 (1A) | Dedicated dual 3.3V LDOs: 3V3_MCU and 3V3_SENS (low-noise) | SAL README Â§Hardware Specifications; LEVIA `POWER.kicad_sch` U6, U7 |
 | **Power Protection** | P-FET (AO3407A) reverse-polarity; TVS on battery/5V/USB; PTCs | SMAJ30CA TVS on VBAT; USBLC6-2P6 on USB; dual 1N5819 diode OR-ing | P-FET reverse polarity + SMAJ30CA TVS + USBLC6-2P6 + Diode OR-ing | SAL README Â§Features L55; LEVIA `POWER.kicad_sch` D2, D3, D4 |
 | **UART Count** | 7 UARTs: USART1, USART2, USART3, UART4, UART5, UART7, UART8 | 8 UARTs: UART1, UART2, UART3, UART4, UART6, UART7, UART8 | 8 UARTs: USART1 (GPS1), USART2 (TELEM1), USART3 (RC), USART6 (TELEM2), UART8 (GPS2), etc. | SAL `hwdef.dat` L49-78; LEVIA `MCU.kicad_sch` labels |
 | **CAN Bus** | TI SN65HVD230D 3.3V CAN transceiver (ISO 11898) | SIT1051TK/3 CAN-FD transceiver with switchable 120Î© (JP1) & PESD2CAN | 3.3V CAN transceiver (SIT1051 or SN65HVD230) on CAN1 & CAN2 | SAL README L75; LEVIA `CAN.kicad_sch` U12, D6, R24 |
 | **PWM Outputs** | 12 Channels on TIM1 (4), TIM8 (4), TIM4 (4) with per-channel DMA | 8 Motor outputs on TIM1, TIM4, TIM5 + 2 ESC telemetry UARTs | 12 Channels: TIM1 (CH1-4), TIM4 (CH1-4), TIM5 (CH1-4) with DMA | SAL `target.h` L171-184; LEVIA `MOTORS[1-4].kicad_sch`; ADR-0002 |
-| **Flight Logging** | Winbond W25Q128JVSIQ (128 Mbit / 16 MB) SPI Flash on SPI1 | MicroSD card slot (TF-028-H265) on 4-bit SDMMC1 (PC8-12, PD2) | MicroSD card slot (SDMMC1 4-bit) (Recommended proposal) | SAL `target.h` L142; LEVIA `MICRO_SD.kicad_sch` J1 |
-| **Video & OSD** | Analog AT7456E OSD on SPI4 with 27 MHz crystal | Analog AT7456E on SPI2 + Digital DJI O3/O4 JST-SH connector | OSD omitted; Digital VTX / Telemetry preferred (Proposal for G0) | SAL `target.h` L133; LEVIA `ANALOG_VTX.kicad_sch` & `DIGITAL_VTX.kicad_sch` |
+| **Flight Logging** | Winbond W25Q128JVSIQ (128 Mbit / 16 MB) SPI Flash on SPI1 | MicroSD card slot (TF-028-H265) on 4-bit SDMMC1 (PC8-12, PD2) | MicroSD card slot (SDMMC1 4-bit), selected for Rev A | SAL `target.h` L142; LEVIA `MICRO_SD.kicad_sch` J1 |
+| **Video & OSD** | Analog AT7456E OSD on SPI4 with 27 MHz crystal | Analog AT7456E on SPI2 + Digital DJI O3/O4 JST-SH connector | Analog OSD omitted for Rev A; external digital VTX / telemetry | SAL `target.h` L133; LEVIA `ANALOG_VTX.kicad_sch` & `DIGITAL_VTX.kicad_sch` |
 | **Connectors** | JST-SH 1.0mm connectors + solder pad fallback | JST-SH 1.0mm (ZX-SH1.0 series) + USB-C | Pixhawk-standard JST-GH (DS-018) + 0.1" servo rail + USB-C | SAL README L57; LEVIA BOM L46-49; ADR-0002 |
 | **PCB Stackup** | 6-layer FR-4, JLC06161H-3313, ENIG, resin-plugged vias | 6-layer FR-4, ENIG, dedicated L2/L5 ground planes | 6-layer FR-4, JLC06161H-3313, ENIG, dedicated ground planes | SAL README L88; LEVIA `LEVIA_H7.kicad_pcb` setup stackup |
 
@@ -127,7 +127,7 @@ The table below contrasts SAL-FC and LEVIA-H7 across all critical electrical and
     > *"The SAL FC uses an 8 MHz oscillator, not a passive crystal. The ArduPilot hwdef.dat must not define `STM32_HSE_BYPASS`. If bypass mode is enabled, the PLL will fail to lock and USB will not enumerate."*
     In the ArduPilot ChibiOS HAL, `STM32_HSE_BYPASS` controls whether the RCC oscillator drive circuitry is disabled (expecting a full CMOS rail-to-rail square wave into `OSC_IN` while `OSC_OUT` is High-Z) or enabled (for quartz crystals and ceramic resonators requiring active inverting drive). If an external active oscillator or clipped sine TCXO is configured with incompatible drive parameters, the STM32 PLL fails to achieve lock, hanging system initialization before USB enumeration.
 *   **LEVIA-H7 Findings**: LEVIA-H7 employs a 3-pin 8.000 MHz Murata ceramic resonator (BOM Part `C341525`, Murata CSTNE series) connected across `OSC_IN` (PH0) and `OSC_OUT` (PH1) with built-in 15 pF load capacitors to ground ([`LEVIA-H7: MCU.kicad_sch`](https://github.com/piecol/LEVIA-H7/blob/main/MCU.kicad_sch)). This operates in standard active crystal drive mode without HSE bypass.
-*   **Lesson for MADpilot-H7**: Clock stability directly determines EKF IMU integration precision and USB timing. If a passive crystal or ceramic resonator is chosen during KiCad schematic capture, `OSC_IN` and `OSC_OUT` must be connected with appropriate matching load capacitors, and `STM32_HSE_BYPASS` must be omitted in `hwdef.dat`. If an active TCXO is selected for superior temperature performance, `OSC_OUT` must float and `STM32_HSE_BYPASS` must be verified against ChibiOS clock trees.
+*   **Lesson for MADpilot-H7**: Clock stability directly determines EKF IMU integration precision and USB timing. If a passive crystal or ceramic resonator is chosen during schematic capture, `OSC_IN` and `OSC_OUT` must be connected with appropriate matching load capacitors, and `STM32_HSE_BYPASS` must be omitted in `hwdef.dat`. If an active TCXO is selected for superior temperature performance, `OSC_OUT` must float and `STM32_HSE_BYPASS` must be verified against ChibiOS clock trees.
 
 ### 4.2 Sensor Buses and STM32H7 Power Domain Partitioning
 *   **SAL-FC Findings**: SAL-FC placed its primary ICM-42688-P on SPI6 (PB3/PB4/PB5) and secondary BMI270 on SPI3 (PC10/PC11/PC12). In the STM32H7 architecture, the bus matrix is partitioned into domains D1 (Core/Cortex-M7), D2 (AHB3/APB1/APB2/APB4 peripherals), and D3 (SmartRun domain). SPI6 is situated in the **D3 domain**, served exclusively by the Basic DMA (BDMA) controller and SRAM4 memory. In standard flight firmware (ArduPilot and iNAV), SPI drivers rely on standard DMA1/DMA2 streams located in D1/D2.
@@ -199,18 +199,18 @@ The **In-Stock-First** rule ([CONTEXT.md](../../CONTEXT.md#L30-L31)) dictates th
 |                   |                    |                       | from battery cables. External puck|
 |                   |                    |                       | is standard. Backlog item #3.     |
 +-------------------+--------------------+-----------------------+-----------------------------------+
-| Analog OSD        | AT7456E + 27MHz    | None (Omitted)        | Proposal for G0: Analog OSD chips |
-|                   | (SAL & LEVIA)      | [Proposed]            | add 27MHz crystal, routing noise, |
+| Analog OSD        | AT7456E + 27MHz    | None (Omitted)        | Rev A decision: Analog OSD chips |
+|                   | (SAL & LEVIA)      | [Approved Rev A]      | add 27MHz crystal, routing noise, |
 |                   |                    |                       | and BOM cost. Fixed-wing uses     |
 |                   |                    |                       | digital VTX (DJI/HDZero) or GCS.  |
 +-------------------+--------------------+-----------------------+-----------------------------------+
-| Flight Logging    | W25Q128 16MB Flash | MicroSD Slot (SDMMC1) | Proposal for G0: 16MB SPI flash   |
-|                   | (SAL-FC)           | [Proposed]            | is insufficient for long flights. |
+| Flight Logging    | W25Q128 16MB Flash | MicroSD Slot (SDMMC1) | Rev A decision: 16MB SPI flash    |
+|                   | (SAL-FC)           | [Approved Rev A]      | is insufficient for long flights. |
 |                   |                    |                       | 4-bit SDMMC1 provides gigabytes.  |
 +-------------------+--------------------+-----------------------+-----------------------------------+
-| Digital VTX Rail  | 9V Buck Converter  | 9V Auxiliary Rail     | Proposal for G0: Incorporate      |
-|                   | (LEVIA-H7)         | [Proposed]            | LEVIA's switchable 9V buck to     |
-|                   |                    |                       | power digital air units cleanly.  |
+| Digital VTX Rail  | 9V Buck Converter  | None (Omitted)        | Rev A decision: external VTX     |
+|                   | (LEVIA-H7)         | [Approved Rev A]      | regulator if required; no 9V     |
+|                   |                    |                       | buck in this revision.           |
 +-------------------+--------------------+-----------------------+-----------------------------------+
 ```
 
@@ -345,18 +345,31 @@ The table below maps all onboard sensors, storage media, and oscillator connecti
 | | `SDIO_D3` | **PC11**| `SDMMC1_D3` (AF12) | D1 | 4-bit SDMMC Data 3 with 10k pull-up (matches LEVIA PC11) |
 | | `SDIO_CK` | **PC12**| `SDMMC1_CK` (AF12) | D1 | SDMMC High-Speed Clock Line (matches LEVIA PC12) |
 | | `SDIO_CMD` | **PD2** | `SDMMC1_CMD` (AF12) | D1 | SDMMC Command/Response with 10k pull-up (matches LEVIA) |
-| **System Clock** | `OSC_IN` | **PH0** | `RCC_OSC_IN` | Core | 8.000 MHz primary clock input from crystal/TCXO |
-| (8 MHz HSE) | `OSC_OUT` | **PH1** | `RCC_OSC_OUT` | Core | Clock output to crystal (leave NC if active TCXO used) |
+| **System Clock** | `OSC_IN` | **PH0** | `RCC_OSC_IN` | Core | 8.000 MHz primary clock input from passive quartz crystal |
+| (8 MHz HSE) | `OSC_OUT` | **PH1** | `RCC_OSC_OUT` | Core | Clock output to passive quartz crystal with load capacitors |
 
 ---
 
-## 8. Summary of Open Decisions for the Project Owner at Gate G0
+## 8. Resolved Rev A Decisions
 
-To prepare the MADpilot-H7 for Phase-1 schematic capture and the mandatory **G0 External Design Review** ([PLAN.md](../../PLAN.md#L28-L29)), the following five engineering decisions are flagged for project owner sign-off:
+The Program Lead settled these choices in the [Rev A specification](https://github.com/Mohameddewedar/MADpilot/issues/10). They are closed design inputs, not open G0 choices. The external reviewer verifies implementation; a proposed change requires recorded approval.
+
+| Decision | Approved Rev A choice | Decision record |
+|---|---|---|
+| Base Design | LEVIA-H7; SAL-FC retained for firmware/power cross-check | [ADR-0003 amendment](../adr/0003-base-design-sal-fc-primary.md) |
+| EDA tool | Fresh native Altium capture; historical KiCad records retained | [ADR-0005](../adr/0005-altium-eda-tool.md) |
+| HSE | Passive 8.000 MHz quartz crystal with load capacitors; no HSE bypass | [Rev A requirements](rev-a-schematic-requirements.md#2-mcu-sheet) |
+| Analog OSD | Omitted | Rev A specification |
+| Flight logging | Four-bit SDMMC1 MicroSD on PC8-PC12 / PD2 | [Rev A requirements](rev-a-schematic-requirements.md#6-storage-sheet) |
+| Auxiliary VTX rail | Omitted; external regulator if required | Rev A specification |
+
+Apply the [Rev A design gates](rev-a-design-gates.md) for capture, routing, review and order evidence. Inventory values in historical records are dated observations, not current stock verification.
+
+The following matrix is retained solely as the historical alternatives considered before the decisions above:
 
 ```
 +----------------------------------------------------------------------------------------------------+
-|                                    Gate G0 Open Decisions Matrix                                   |
+|                              Historical Alternatives (Resolved Above)                              |
 +---+-----------------------------+-----------------------+-----------------------+------------------+
 | # | Decision Item               | Option A (Default)    | Option B (Alternate)  | Trade-Off Impact |
 +---+-----------------------------+-----------------------+-----------------------+------------------+

@@ -5,7 +5,7 @@ This directory is the staging area for hardware design publication packages rele
 Per [ADR-0001](../../docs/adr/0001-open-hardware-license-path.md), while the project is in personal/educational development and nothing is distributed, design files remain private. The moment any Flight Controller unit is sold or publicly distributed, complete corresponding design files must be published under CERN-OHL-S-2.0.
 
 > **Note on Project Phase:**
-> In Phase 0, active hardware design has not yet started and the top-level `hardware/` design directory does not exist yet (scheduled for Phase 1 per [PLAN.md](../../PLAN.md)). When hardware design begins in Phase 1, `release/design-files/` serves as the staging location where frozen, verifiable release archives are assembled prior to publication at sale.
+> Rev A is awaiting its Altium redraw and layout. `hardware/` contains the historical schematic PDF and BOM records; `release/design-files/` stages frozen, verifiable release archives matching the manufactured revision before publication at sale.
 
 ---
 
@@ -13,14 +13,14 @@ Per [ADR-0001](../../docs/adr/0001-open-hardware-license-path.md), while the pro
 
 When a release is activated for sale or public distribution, this directory publishes a clean, complete, standalone archive of the hardware design:
 
-1. **KiCad Project Sources**:
-   - Project file (`.kicad_pro`)
-   - Schematic files (`.kicad_sch`)
-   - PCB layout files (`.kicad_pcb`)
-   - Custom schematic symbols, footprint libraries, and 3D models used in the design
+1. **Altium Project Sources**:
+   - Project file (`.PrjPcb`)
+   - Schematic files (`.SchDoc`)
+   - PCB layout files (`.PcbDoc`)
+   - Schematic symbol and footprint libraries (`.SchLib`, `.PcbLib`) and 3D models used in the design
 
 2. **Bill of Materials (BOM)**:
-   - Complete KiCad BOM in CSV format
+   - Complete Altium BOM in CSV format
    - Per-part procurement records and assembly house part numbers (matching the In-Stock-First snapshot)
 
 3. **Manufacturing & Fabrication Outputs**:
@@ -33,11 +33,11 @@ When a release is activated for sale or public distribution, this directory publ
 
 ## CERN-OHL-S-2.0 Attribution & Reciprocity Obligations
 
-The MADpilot-H7 hardware design derives from open hardware reference designs (specifically SAL-FC as primary baseline per [ADR-0003](../../docs/adr/0003-base-design-sal-fc-primary.md), with LEVIA-H7 as cross-check). Consequently, any public distribution or sale entails strict compliance with CERN-OHL-S-2.0:
+The MADpilot-H7 Base Design is LEVIA-H7 by piecol, per the amendment to [ADR-0003](../../docs/adr/0003-base-design-sal-fc-primary.md). SAL-FC is retained as a firmware-mapping and power-architecture reference; Pixhawk 6C is the Reference Board. Consequently, any public distribution or sale entails strict compliance with CERN-OHL-S-2.0:
 
 1. **Complete Source Making Available (Section 3)**:
-   - You must make available the complete Corresponding Source (the editable KiCad files) to anyone who receives the physical hardware or design files.
-   - The source must be provided in the preferred format for making modifications (KiCad format, not solely Gerbers or PDFs).
+   - You must make available the complete Corresponding Source (the editable Altium files) to anyone who receives the physical hardware or design files.
+   - The source must be provided in the preferred format for making modifications (Altium format, not solely Gerbers or PDFs).
 
 2. **Attribution Notices (Section 4)**:
    - All existing copyright, author attribution, and license notices from upstream designs (SAL-FC, LEVIA-H7) must be preserved intact.

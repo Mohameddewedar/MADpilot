@@ -8,7 +8,7 @@ The full text of the GNU General Public License Version 3 is available at:
   release/licenses/GPL-3.0.txt
 
 2. Hardware Design Files (CERN-OHL-S-2.0)
-Hardware design files under the hardware/ directory (including KiCad schematics, PCB layouts, bill of materials, Gerbers, pick-and-place files, and related fabrication packages) are licensed under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
+Hardware design files under the hardware/ directory (including Altium schematics, PCB layouts, bill of materials, Gerbers, pick-and-place files, and related fabrication packages) are licensed under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
 The full text of the CERN Open Hardware Licence Version 2 - Strongly Reciprocal is available at:
   release/licenses/CERN-OHL-S-2.0.txt
 
