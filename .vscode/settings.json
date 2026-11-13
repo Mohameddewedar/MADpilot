@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "/home/mad/.vscode/extensions/altium.developer-0.4.0/python/SandboxProcess",
+        "/home/mad/.vscode/extensions/altium.developer-0.4.0/python/SandboxProcess/.deps",
+        "/home/mad/.vscode/extensions/altium.developer-0.4.0/python"
+    ]
+}
