@@ -1,12 +1,23 @@
 /.agents
 /.claude
 /.commandcode
+/.pi
+/.vscode
 /skills-lock.json
 __pycache__/
 *.pyc
 staging/
 build/
-*.kicad_prl
-*.kicad_sch-bak
-*.kicad_pcb-bak
+*.PrjPcb-bak
+*.SchDoc-bak
+*.PcbDoc-bak
+*.SchDocPreview
+*.PcbDocPreview
+*.PrjPcbStructure
+*.DsnWrk
+History/
+Project Outputs for*/
+__Previews/
 web/.cache/
+.tmp.driveupload/
+.tmp.drivedownload/
